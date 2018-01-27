@@ -1,9 +1,7 @@
 # RE-Eval
-Relation Extraction evaluation dataset 
+## Relation Extraction evaluation dataset 
 
-Relations considers for this dataset
-
-**Relations:**
+The following is the list of relations considers to construct this dataset
 
 | **Subject**         | **Predicate**       | **Object** |
 | -----------         | -------------       | ---------- | 
