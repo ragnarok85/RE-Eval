@@ -6,7 +6,7 @@ The following list shows the relations considered to construct this dataset. Som
 | **Relation (r)**         | **Subject (s)**       | **Object (o)**    | **Change in DBpedia?** |  
 | -----------         | -------------       | ----------    | ----------------- |
 | Employer            | Person              |	Organization  | (o)dbo:Organisation |
-| Occupation          | Person              | Occupation    | (o)dbo:PersonFunction |
+| Occupation          | Person              | Occupation    | (o)dbo:Work |
 | Nationality         | Person              | Country       | |
 | Spouse              | Person              |	Person        | |
 | Children            | Person              |	Person        | (r)dbp:children|
