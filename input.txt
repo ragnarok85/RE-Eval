@@ -1,5 +1,5 @@
 employer,Person,Organisation
-occupation,Person,PersonFunction
+occupation,Person,Work
 nationality,Person,Country
 spouse,Person,Person
 dbp:children,Person,Person
