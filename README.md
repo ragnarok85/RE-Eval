@@ -3,7 +3,7 @@
 
 The following is the list of relations considers to construct this dataset
 
-| **Subject**         | **Predicate**       | **Object** |
+| **Predicate**         | **Subject**       | **Object** |
 | -----------         | -------------       | ---------- | 
 | Employer            | Person              |	Organization |
 | Occupation          | Person              | Occupation |
