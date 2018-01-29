@@ -1,0 +1,12 @@
+employer,Person,Organisation
+occupation,Person,PersonFunction
+nationality,Person,Country
+spouse,Person,Person
+dbp:children,Person,Person
+dbp:parents,Person,Person
+residence,Person,City
+school,Person,School
+award,Person,Award
+dbp:siblings,Person,Person
+birthPlace,Person,City
+party,Person,PoliticalParty

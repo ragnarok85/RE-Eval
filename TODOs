@@ -1,0 +1,30 @@
+SPARQL query
+
+SELECT ?s ?o ?label ?abstract where {
+
+?s a <http://dbpedia.org/ontology/Person> .
+?s <http://dbpedia.org/ontology/employer> ?o .
+?o a <http://dbpedia.org/ontology/Organisation> .
+?o rdfs:label ?label.
+?s dbo:abstract ?abstract.
+
+FILTER(LANG(?label) = "" || LANGMATCHES(LANG(?label), "en"))
+FILTER(LANG(?abstract) = "" || LANGMATCHES(LANG(?abstract), "en"))
+}
+
+<29/01/18>
+
+SELECT ?s ?o ?ls ?lo ?abstract WHERE {  
+
+?s a <http://dbpedia.org/ontology/Person>. 
+?s <http://dbpedia.org/ontology/school> ?o. 
+?o a <http://dbpedia.org/ontology/School>. 
+?s <http://www.w3.org/2000/01/rdf-schema#label> ?ls. 
+?o http://www.w3.org/2000/01/rdf-schema#label> ?lo. 
+?s dbo:abstract ?abstract. 
+
+FILTER(LANG(?ls) = "" || LANGMATCHES(LANG(?ls), "en")) 
+FILTER(LANG(?lo) = "" || LANGMATCHES(LANG(?lo), "en")) 
+FILTER(LANG(?abstract) = "" || LANGMATCHES(LANG(?abstract), "en")) 
+
+}
