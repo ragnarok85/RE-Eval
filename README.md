@@ -19,8 +19,7 @@ The following list shows the relations considered to construct this dataset. Som
 | Party affiliation   | Person              | Party         | (r)dbo:party and (o) dbo:PoliticalParty |
 
 | **Relation (dbpedia relation)**   | **Number of triples found** |
-| **only if changed from original** |                             |
-| -------------------------------   | --------------------------- |
+| **only if changed from original** | -                            |
 | Employer (organisation)         | 4908 |
 | Occupation                      | 10000 |
 | Nationality                     | 10000 |
