@@ -24,7 +24,7 @@ The following list shows the number of triple found per relation. Those relation
 | **Original Relation**   | **DBpedia relation**    | **Number of triples found** |
 | ---------------------   | --------------------    | --------------------------- |
 | Employer                | organization            | 4908 |
-| Occupation              | personFunction          | 10000 |
+| Occupation              | Work                    | 1028 |
 | Nationality             | nationality             | 10000 |
 | Spouse                  | spouse                  | 10000 |
 | Children                | * children              | 785 |
