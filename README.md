@@ -1,5 +1,5 @@
 # RE-Eval
-## Relation Extraction evaluation dataset 
+## Relation Extraction - evaluation dataset 
 
 The following list shows the relations considered to construct this dataset. Some relations was changed for a similar relation in DBpedia.
 
@@ -9,26 +9,29 @@ The following list shows the relations considered to construct this dataset. Som
 | Occupation          | Person              | Occupation    | (o)dbo:PersonFunction |
 | Nationality         | Person              | Country       | |
 | Spouse              | Person              |	Person        | |
-| *Children            | Person              |	Person        | (r)dbp:children*|
+| Children            | Person              |	Person        | (r)dbp:children|
 | Parents             | Person              |	Person        | (r)dbp:parents | 
 | Cities of Residence | Person              |	City          | (r)dbo:residence |    
 | Schools Attended    | Person              |	School        | (r)dbo:school |
 | Awards              | Person              |	Award         | (r)dbo:award |
-| *Siblings            | Person              |	Person        | (r)dbp:siblings*|    
+| Siblings            | Person              |	Person        | (r)dbp:siblings|    
 | City of Birth       | Person              | City          | (r)dbo:birthPlace |  
 | Party affiliation   | Person              | Party         | (r)dbo:party and (o) dbo:PoliticalParty |
 
-| **Relation (dbpedia relation)**   | **Number of triples found** |
-| **only if changed from original** | -                            |
-| Employer (organisation)         | 4908 |
-| Occupation                      | 10000 |
-| Nationality                     | 10000 |
-| Spouse                          | 10000 |
-| Children                        | 785 |
-| Parents                         | 1546 |
-| Cities of Residence (residence) | 10000 |
-| Schools Attended (school)       | 3225 |
-| Awards (award)                  | 10000 |
-| Siblings                        | 394 |
-| City of Birth (brithPlace)      | 10000 |
-| Party affiliation (party)       | 10000 |
+
+The following list shows the number of triple found per relation. Those relations with an * are defined as *RDFS properties*. 
+
+| **Original Relation**   | **DBpedia relation**    | **Number of triples found** |
+| ---------------------   | --------------------    | --------------------------- |
+| Employer                | organization            | 4908 |
+| Occupation              | personFunction          | 10000 |
+| Nationality             | nationality             | 10000 |
+| Spouse                  | spouse                  | 10000 |
+| Children                | * children              | 785 |
+| Parents                 | * parents               | 1546 |
+| Cities of Residence     | residence               | 10000 |
+| Schools Attended        | school                  | 3225 |
+| Awards                  | award                   | 10000 |
+| Siblings                | * siblings              | 394 |
+| City of Birth           | birthPlace              | 10000 |
+| Party affiliation       | party                   | 10000 |
