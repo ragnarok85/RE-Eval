@@ -18,8 +18,9 @@ The following list shows the relations considered to construct this dataset. Som
 | City of Birth       | Person              | City          | (r)dbo:birthPlace |  
 | Party affiliation   | Person              | Party         | (r)dbo:party and (o) dbo:PoliticalParty |
 
-| **Relation (dbpedia relation)** | **Number of triples found** |
-| ------------------------------- | --------------------------- |
+| **Relation (dbpedia relation)**   | **Number of triples found** |
+| **only if changed from original** |                             |
+| -------------------------------   | --------------------------- |
 | Employer (organisation)         | 4908 |
 | Occupation                      | 10000 |
 | Nationality                     | 10000 |
