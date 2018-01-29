@@ -5,7 +5,7 @@ The following is the list of relations considers to construct this dataset
 
 | **Predicate (p)**         | **Subject (s)**       | **Object (o)**    | **Change in DBpedia?** |  
 | -----------         | -------------       | ----------    | ----------------- |
-| Employer            | Person              |	Organization  | |
+| Employer            | Person              |	Organization  | (o)dbo:Organisation |
 | Occupation          | Person              | Occupation    | (o)dbo:PersonFunction |
 | Nationality         | Person              | Country       | |
 | Spouse              | Person              |	Person        | |
