@@ -21,10 +21,10 @@ The following list shows the relations considered to construct this dataset. Som
 
 The following list shows the number of triple found per relation. Those relations with an * are defined as *RDFS properties*. 
 
-| **Original Relation**   | **DBpedia relation**    | **Number of triples found** |
+| **Original Relation**   | **DBpedia Relation**    | **Number of triples found** |
 | ---------------------   | --------------------    | --------------------------- |
 | Employer                | organization            | 4908 |
-| Occupation              | Work                    | 1028 |
+| Occupation              | occupation              | 1028 |
 | Nationality             | nationality             | 10000 |
 | Spouse                  | spouse                  | 10000 |
 | Children                | * children              | 785 |
