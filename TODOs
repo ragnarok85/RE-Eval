@@ -1,30 +1,30 @@
 SPARQL query
 
-SELECT ?s ?o ?label ?abstract where {
+SELECT ?s ?o where {
 
 ?s a <http://dbpedia.org/ontology/Person> .
 ?s <http://dbpedia.org/ontology/employer> ?o .
 ?o a <http://dbpedia.org/ontology/Organisation> .
-?o rdfs:label ?label.
-?s dbo:abstract ?abstract.
 
-FILTER(LANG(?label) = "" || LANGMATCHES(LANG(?label), "en"))
-FILTER(LANG(?abstract) = "" || LANGMATCHES(LANG(?abstract), "en"))
 }
 
-<29/01/18>
+<30/01/18>
 
-SELECT ?s ?o ?ls ?lo ?abstract WHERE {  
+query for the first section annotations
 
-?s a <http://dbpedia.org/ontology/Person>. 
-?s <http://dbpedia.org/ontology/school> ?o. 
-?s <http://www.w3.org/2000/01/rdf-schema#label> ?ls.
-?s dbo:abstract ?abstract. 
-?o a <http://dbpedia.org/ontology/School>. 
-?o http://www.w3.org/2000/01/rdf-schema#label> ?lo. 
+PREFIX nif: <http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 
-FILTER(LANG(?ls) = "" || LANGMATCHES(LANG(?ls), "en")) 
-FILTER(LANG(?lo) = "" || LANGMATCHES(LANG(?lo), "en")) 
-FILTER(LANG(?abstract) = "" || LANGMATCHES(LANG(?abstract), "en")) 
+SELECT * WHERE {
+  ?s a ?type.
+  FILTER (?type=nif:Phrase || ?type=nif:Word)
+  
+  ?s nif:anchorOf ?anchor;
+     nif:superString ?lsuper.
+  
+  ?lsuper nif:superString ?psuper.
+  
+  ?psuper skos:notation ?notation
 
+  FILTER(str(?notation)='0')
 }
