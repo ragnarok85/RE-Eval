@@ -9,12 +9,12 @@ The following list shows the relations considered to construct this dataset. Som
 | Occupation          | Person              | Occupation    | (o)dbo:PersonFunction |
 | Nationality         | Person              | Country       | |
 | Spouse              | Person              |	Person        | |
-| **Children            | Person              |	Person        | (r)dbo:child** |
+| **Children**            | **Person**              |	**Person**        | **(r)dbo:child** |
 | Parents             | Person              |	Person        | (r)dbo:parent | 
 | Cities of Residence | Person              |	City          | (r)dbo:residence |    
 | Schools Attended    | Person              |	School        | (r)dbo:almaMater |
 | Awards              | Person              |	Award         | (r)dbo:award |
-| **Siblings            | Person              |	Person        | (r)dbo:child** |    
+| **Siblings**            | **Person**              |	**Person**        | **(r)dbo:child** |    
 | City of Birth       | Person              | City          | (r)dbo:birthPlace |  
 | Party affiliation   | Person              | Party         | (r)dbo:party and (o) dbo:PoliticalParty |
 
@@ -27,11 +27,11 @@ The following list shows the number of triple found per relation. Those relation
 | Occupation              | occupation              | 10000 |
 | Nationality             | nationality             | 10000 |
 | Spouse                  | spouse                  | 10000 |
-| **Children                | child                   | 10000**|
+| **Children**                | **child**                   | **10000**|
 | Parents                 | parent                  | 10000 |
 | Cities of Residence     | residence               | 10000 |
 | Schools Attended        | almaMater               | 10000 |
 | Awards                  | award                   | 10000 |
-| **Siblings                | child                   | 10000** |
+| **Siblings**                | **child**                   | **10000** |
 | City of Birth           | birthPlace              | 10000 |
 | Party affiliation       | party                   | 10000 |
