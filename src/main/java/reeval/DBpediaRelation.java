@@ -2,12 +2,13 @@ package reeval;
 
 public class DBpediaRelation {
 	
-	String sbjURI;
-	String objURI;
-	String sbjLabel;
-	String objLabel;
-	String targetRelation;
-	String sbjAbstract;
+	private String sbjURI;
+	private String objURI;
+	private String sbjLabel;
+	private String objLabel;
+	private String targetRelation;
+	private String sbjAbstract;
+	private String prdURI;
 	
 	public DBpediaRelation() {
 		
@@ -54,6 +55,18 @@ public class DBpediaRelation {
 	}
 	public void setSbjAbstract(String sbjAbstract) {
 		this.sbjAbstract = sbjAbstract;
+	}
+
+	public String getPrdURI() {
+		return prdURI;
+	}
+
+	public void setPrdURI(String prdURI) {
+		this.prdURI = prdURI;
+	}
+
+	public String getTargetRelation() {
+		return targetRelation;
 	}
 
 }

@@ -6,12 +6,16 @@ public class Report {
 	private String object;
 	private String context;
 	private String fileName;
+	private String sentence;
+	private String kindOfMatch;
 	
 	public String printReport() {
-		return this.subject + "\t"
-				+ this.relation +"\t"
+		return this.kindOfMatch + "\t"
+				+ this.subject + "\t"
+					+ this.relation +"\t"
 						+ this.object + "\t"
-								+ this.context + "\t"; 
+								+ this.sentence + "\t"
+									+ this.context + "\t"; 
 	}
 	
 	public String getSubject() {
@@ -43,6 +47,22 @@ public class Report {
 	}
 	public void setFileName(String fileName) {
 		this.fileName = fileName;
+	}
+
+	public String getKindOfMatch() {
+		return kindOfMatch;
+	}
+
+	public void setKindOfMatch(String kindOfMatch) {
+		this.kindOfMatch = kindOfMatch;
+	}
+
+	public String getSentence() {
+		return sentence;
+	}
+
+	public void setSentence(String sentence) {
+		this.sentence = sentence;
 	}
 
 }
