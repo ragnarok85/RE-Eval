@@ -1,4 +1,4 @@
-select ?s ?o where {
+select ?s ?o (<http://dbpedia.org/ontology/party> as ?p) where {
 ?s a <http://dbpedia.org/ontology/Person> .
 ?s <http://dbpedia.org/ontology/party> ?o .
 ?o a <http://dbpedia.org/ontology/PoliticalParty> . }
