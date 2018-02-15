@@ -10,7 +10,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -20,6 +19,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
 import org.apache.jena.query.Query;
@@ -33,12 +33,17 @@ import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.util.FileManager;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.SKOS;
+import org.apache.log4j.Logger;
 
-import opennlp.tools.sentdetect.SentenceDetectorME;
+import objects.Annotation;
+import objects.DBpediaRelation;
+import objects.REStats;
+import objects.Report;
 import opennlp.tools.sentdetect.SentenceModel;
-import opennlp.tools.tokenize.TokenizerME;
 import opennlp.tools.tokenize.TokenizerModel;
 import opennlp.tools.util.InvalidFormatException;
+import sparql.Queries;
+import sparql.SparqlQueries;
 
 public class RelationExtraction {
 	/*
@@ -53,17 +58,28 @@ public class RelationExtraction {
 	 *    3. The name file must be the same as the relation and must be ended with .rq
 	 */
 	
-	private static String service = "http://dbpedia.org/sparql";
+	private static Logger logger = Logger.getLogger(RelationExtraction.class);
 	
-	private String[] punctuationMarks = {",","'",":","-","!","~","\\(","\\)","\\.","\"",";","\""};
-	private String stopWordsPattern = String.join("|", punctuationMarks);
+	static List<Report> listReport = new ArrayList<Report>();
+	static Set<DBpediaRelation> notInList = new HashSet<DBpediaRelation>();
+	static Integer counterEquals = 0;
+	static Integer counterContains = 0;
 	
-	public static void main(String[] args) throws NoSuchAlgorithmException, InvalidFormatException, IOException {
+	private SparqlQueries sq = new SparqlQueries();
+	
+	public static void main(String[] args) throws NoSuchAlgorithmException, InvalidFormatException, IOException, InterruptedException {
 		File sparqlPath = new File(args[0]);
 		File[] sparqlFiles = sparqlPath.listFiles();
 		File outputFolder = new File(args[2]);
+		File outputAbstract = new File(outputFolder.getAbsoluteFile()+"/Abstract");
+		File outputNotInAbstract = new File(outputFolder.getAbsoluteFile()+"/notInAbstract");
+		File outputNotInSection = new File(outputFolder.getAbsoluteFile()+"/notInSection");
+		File outputSections = new File(outputFolder.getAbsoluteFile()+"/Sections");
 		File[] outputFiles = outputFolder.listFiles();
+		
 		List<String> listProcessed = new ArrayList<String>();
+		List<DBpediaRelation> notInAbstractList = new ArrayList<DBpediaRelation>();
+		List<DBpediaRelation> notInSectionList = new ArrayList<DBpediaRelation>();
 		
 		String nifPath = args[1];
 				
@@ -75,72 +91,224 @@ public class RelationExtraction {
 		
 		Map<String,String> mapSparqlQueries = new HashMap<String,String>();
 		List<REStats> listStats = new ArrayList<REStats>();
-		//Map<String,List<DBpediaRelation>> mapRelations = new HashMap<String,List<DBpediaRelation>>();
 		
 		listProcessed.addAll(re.processedFiles(outputFiles));
 		
 		for(File file : sparqlFiles) {
-//			if(!file.getName().contains("Employer"))
-//				continue;
-			if(listProcessed.contains(file.getName().replace(".rq", ""))) {
-				System.out.println("File " + file.getName().replace(".rq", "") + " was already processed.");
+			if(!file.getName().contains("Employer") && !file.getName().contains("SchoolAttended") && !file.getName().contains("Siblings"))
 				continue;
-			}
+//			if(listProcessed.contains(file.getName().replace(".rq", ""))) {
+//				System.out.println("File " + file.getName().replace(".rq", "") + " was already processed.");
+//				continue;
+//			}
 			String query = re.readSparqlQueries(file);
-			System.out.println(query);
+			logger.info(query);
 			mapSparqlQueries.put(file.getName().replace(".rq", ""),query);
 			
 		}
 		for(Map.Entry<String, String> entry : mapSparqlQueries.entrySet()) {
-			System.out.println("Processing file: " + entry.getKey());
+			logger.info("Processing file: " + entry.getKey());
+			Long initialTime = System.currentTimeMillis();
+			Long endTime = 0L;
+			String timeElapsed = "";
 			List<DBpediaRelation> listRelations = new ArrayList<DBpediaRelation>();
-			listRelations.addAll(re.queryRelations(entry.getValue(),entry.getKey(),listStats));
-			re.process(listRelations, nifPath, sentenceModel, tokenizerModel, entry.getKey(), outputFolder.getPath());
-			//break;
+			listRelations.addAll(re.sq.queryDBpediaRelations(entry.getValue(),entry.getKey(),listStats));
+			
+//			notInSectionList.addAll(re.lookRelationsInSection(listRelations, nifPath, 
+//					sentenceModel, tokenizerModel, entry.getKey(), outputSections));
+			logger.info("Beging Abstract");
+			re.lookRelationsInAbstract(listRelations, nifPath, 
+					sentenceModel, tokenizerModel, entry.getKey(), outputAbstract);
+			notInAbstractList.addAll(notInList);
+			notInList.clear();
+			logger.info("relations not found in abstract = " + notInAbstractList.size());
+			re.writeNotInAbstractRelations(outputNotInAbstract, entry.getKey(), 
+					notInAbstractList);
+
+			endTime = System.currentTimeMillis() - initialTime;
+			timeElapsed = String.format("TOTAL TIME = %d min, %d sec", TimeUnit.MILLISECONDS.toMinutes(endTime),
+	    			TimeUnit.MILLISECONDS.toSeconds(endTime) - 
+	    		    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(endTime)));
+			re.writeTime(outputFolder, "AbstractTime.csv", entry.getKey(), timeElapsed);
+			logger.info("End Abstract");
+			logger.info("Begin Section");
+			initialTime = System.currentTimeMillis();
+			if(!notInAbstractList.isEmpty()) {
+				notInSectionList.addAll(re.lookRelationsInSection(notInAbstractList, nifPath, 
+					sentenceModel, tokenizerModel, entry.getKey(), outputSections));
+				re.writeNotInAbstractRelations(outputNotInSection, entry.getKey(), 
+						notInSectionList);
+			}
+			endTime = System.currentTimeMillis() - initialTime;
+			timeElapsed = String.format("TOTAL TIME = %d min, %d sec", TimeUnit.MILLISECONDS.toMinutes(endTime),
+	    			TimeUnit.MILLISECONDS.toSeconds(endTime) - 
+	    		    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(endTime)));
+			re.writeTime(outputFolder, "SectionTime.csv", entry.getKey(), timeElapsed);
+			logger.info("End Section");
 		}
 		
 		for(REStats stat : listStats) {
-			System.out.println("Relation = " + stat.getPredicate() + " #Results = " + stat.getNumberResults());
+			logger.info("Relation = " + stat.getPredicate() + " #Results = " + stat.getNumberResults());
 		}
+		
+		
 	}
 	
-	
 	/*
-	 * SPARQL DBpedia
+	 * NIF
 	 */
-	
-	public List<DBpediaRelation> queryRelations(String queryString, String targetRelation, List<REStats> listStats) throws UnsupportedEncodingException {
-		List<DBpediaRelation> listDBRelations = new ArrayList<DBpediaRelation>();
-		REStats stat = new REStats();
+	//look for the nif file of the subject resource
+	public void lookRelationsInAbstract(List<DBpediaRelation> listRelations, String nifPath, 
+			SentenceModel sentenceModel, TokenizerModel tokenizerModel, 
+			String fileName, File outputFolder) throws NoSuchAlgorithmException, IOException, InterruptedException {
 		
-		stat.setQueryString(queryString);
+		List<Thread> listThreads = new ArrayList<Thread>();
+		List<String> listArticlesNotFound = new ArrayList<String>();
+		SparqlQueries sq = new SparqlQueries();
 		
-		Query query = QueryFactory.create(queryString);
-		
-		try(QueryExecution qexec = QueryExecutionFactory.sparqlService(service, query)){
-			ResultSet result = qexec.execSelect();
-			int counterResults = 0;
-			while(result.hasNext()) {
-				DBpediaRelation relation = new DBpediaRelation(targetRelation);
-				
-				QuerySolution qs = result.next();
-				counterResults++;
-				
-				String s = new String(qs.getResource("?s").getURI().getBytes(),"UTF-8");
-				String o = new String(qs.getResource("?o").getURI().getBytes(),"UTF-8");
-				String p = qs.getResource("?p").getURI();
-				
-				relation.setSbjURI(s);
-				relation.setObjURI(o);
-				relation.setPrdURI(p);
-				
-				listDBRelations.add(relation);
+		logger.info(listRelations.get(0).getTagetRelation());
+		int counterRels = 0;
+		for(DBpediaRelation rel : listRelations) {
+			
+			String[] sbjSplit = rel.getSbjURI().split("/");
+			String sbj = sbjSplit[sbjSplit.length-1];
+			String sbjAnchor = sbj.replaceAll("_", " ");
+			
+//			if(!sbj.equals("Afsaneh_Najmabadi")) {
+//				continue;
+//			}
+			
+			String[] objSplit = rel.getObjURI().split("/");
+			String objAnchor = objSplit[objSplit.length-1].replaceAll("_", " ");
+
+			// System.out.println(sbjAnchor + "-" + objAnchor);
+			File filePath = lookNIFFile(sbj, nifPath);
+
+			// QUERIES
+			List<Annotation> listLinkAnnotations = new ArrayList<Annotation>();
+			BZip2CompressorInputStream inputStream = createBz2Reader(filePath);
+			if (inputStream == null) {
+				logger.info("File \"" + filePath.getAbsolutePath() + "\"(" + sbj + ") does not exist");
+				listArticlesNotFound.add(sbj+"--"+filePath.getName());
+				continue;
 			}
-			stat.setPredicate(targetRelation);
-			stat.setNumberResults(counterResults);
+			
+			Model model = createJenaModel(inputStream);
+			//Abstract
+			listLinkAnnotations.addAll(sq.queryAbstractAnnotations(model));
+			
+			AbstractRelationExtractor are = new AbstractRelationExtractor(sbjAnchor,objAnchor,"0","Abstract",
+					model, sentenceModel, tokenizerModel, rel, listLinkAnnotations);
+			listThreads.add(are);
+			are.start();
+			//System.out.println("threads running: " + Thread.activeCount());
+			System.out.println("Relation processing/processed = " + counterRels++ +"/" + listRelations.size());
 		}
-		listStats.add(stat);
-		return listDBRelations;
+		for(Thread t : listThreads) {
+			t.join();
+		}
+		// break;
+//		System.out.println("File Name = " + fileName);
+		String[] counterApproach = countApproachFromReport(listReport).split("--");//sbj-obj--pronoun-obj
+		String[] counterExtraction = countExtractionFromReport(listReport).split("--");//in sentence -- in paragraph
+		int counterBlank = countBlankSentences(listReport);
+		writeReport(outputFolder,fileName,listReport, counterEquals, counterContains, notInList.size(),
+				counterApproach[0], counterApproach[1], counterExtraction[0], counterExtraction[1],
+				counterBlank, listArticlesNotFound);
+		
+		
+		logger.info("number of equals: " + counterEquals);
+		logger.info("number of contains: " + counterContains);
+		logger.info("number of remaining relations: " + notInList.size());
+		
+	}
+	
+	public Set<DBpediaRelation> lookRelationsInSection(List<DBpediaRelation> listRelations, String nifPath, 
+			SentenceModel sentenceModel, TokenizerModel tokenizerModel, 
+			String fileName, File outputFolder) throws NoSuchAlgorithmException, IOException, InterruptedException {
+		
+		listReport.clear();
+		counterEquals = 0;
+		counterContains = 0;
+		
+		List<String> listArticlesNotFound = new ArrayList<String>();
+		List<Thread> listThreads = new ArrayList<Thread>();
+		Set<DBpediaRelation> setNotInSection = new HashSet<DBpediaRelation>();
+		
+		logger.info(listRelations.get(0).getTagetRelation());
+		
+		int fileCounter = 0;
+		logger.info("number of relations found = " + listRelations.size());
+		int counterRels = 0;
+		for(DBpediaRelation rel : listRelations) {
+			
+			listThreads.clear();
+			String[] sbjSplit = rel.getSbjURI().split("/");
+			String sbj = sbjSplit[sbjSplit.length-1];
+			String sbjAnchor = sbj.replaceAll("_", " ");
+			
+//			if(!sbj.contains("Abigail_Breslin"))
+//				continue;
+			
+			String[] objSplit = rel.getObjURI().split("/");
+			String objAnchor = objSplit[objSplit.length-1].replaceAll("_", " ");
+
+			Map<String,String> mapSections = new HashMap<String,String>();
+			
+			// System.out.println(sbjAnchor + "-" + objAnchor);
+			File filePath = lookNIFFile(sbj, nifPath);
+
+			// QUERIES
+			List<Annotation> listLinkAnnotations = new ArrayList<Annotation>();
+			BZip2CompressorInputStream inputStream = createBz2Reader(filePath);
+			if (inputStream == null) {
+				logger.info("File \"" + filePath.getAbsolutePath() + "\"(" + sbj + ") does not exist");
+				listArticlesNotFound.add(sbj+"--"+filePath.getName());
+				continue;
+			}
+			logger.info(fileCounter++ + "/" + listRelations.size() + ".- processing file = " + filePath.getAbsolutePath() + " ( " + sbj + ")");
+			Model model = createJenaModel(inputStream);
+			//Abstract
+			
+			mapSections.putAll(sq.queryNumberAndTitleSections(model));
+			logger.info("number of sections = " + mapSections.size());
+			
+			int sectionCounter = 0;
+			System.out.println("Relation processing/processed = " + counterRels++ +"/" + listRelations.size());
+			for(Map.Entry<String,String> entry : mapSections.entrySet()) { 
+				listLinkAnnotations.clear();
+				listLinkAnnotations.addAll(sq.querySectionAnnotations(model,entry.getKey()));
+				logger.info("number of annotations for section "+ entry.getKey() +" = " + listLinkAnnotations.size());
+				//System.out.println("processing section number = " + entry.getKey() + " (" + entry.getValue() + ")");
+				if(listLinkAnnotations.size() == 0)
+					continue;
+				AbstractRelationExtractor are = new AbstractRelationExtractor(sbjAnchor,objAnchor,entry.getKey(),
+						entry.getValue(), model, sentenceModel, tokenizerModel, rel, listLinkAnnotations);
+				listThreads.add(are);
+				are.start(); 
+				System.out.println("\tSections processing/processed = " + sectionCounter++ +"/" + mapSections.size());
+			}
+			for(Thread t : listThreads) {
+				t.join();
+			}
+			logger.info(counterEquals + " -- " + counterContains + "\tequals and contains\n\n");
+			if(counterEquals== 0 && counterContains== 0) {
+				setNotInSection.add(rel);
+			}
+			model.close();
+		}
+		// break;
+		logger.info("File Name = " + fileName);
+		String[] counterApproach = countApproachFromReport(listReport).split("--");//sbj-obj--pronoun-obj
+		String[] counterExtraction = countExtractionFromReport(listReport).split("--");//in sentence -- in paragraph
+		int counterBlank = countBlankSentences(listReport);
+		writeReport(outputFolder,fileName+"-Section",listReport, counterEquals, counterContains, notInList.size(),
+				counterApproach[0], counterApproach[1], counterExtraction[0], counterExtraction[1],
+				counterBlank, listArticlesNotFound);
+		logger.info("number of equals: " + counterEquals);
+		logger.info("number of contains: " + counterContains);
+		logger.info("number of remaining relations: " + notInList.size());
+		return setNotInSection;
 	}
 	
 	/*
@@ -161,212 +329,7 @@ public class RelationExtraction {
 		model.setNsPrefix("nif", "http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#");
 		model.setNsPrefix("skos", SKOS.uri);
 	}
-	
-	// retrieve all annotations from abstract section from a given model
-	public List<Annotation> queryAbstractAnnotations(Model model) {
-		List<Annotation> listAnnotations = new ArrayList<Annotation>();
 		
-		String queryString = Queries.ABSTRACTLINKS.query();
-		Query query = QueryFactory.create(queryString);
-		try(QueryExecution qexec = QueryExecutionFactory.create(query, model)){
-			ResultSet result = qexec.execSelect();
-			while(result.hasNext()) {
-				Annotation annotation = new Annotation();
-				QuerySolution sol = result.next();
-				annotation.setAnchor(sol.getLiteral("?anchor").getString());
-				annotation.setURI(sol.getResource("?s").getURI());
-				annotation.setParagraphURI(sol.getResource("?lsuper").getURI()); //linkSuperString --> Paragraph
-				annotation.setSectionURI(sol.getResource("?psuper").getURI());//paragraphSuperString --> Section
-				listAnnotations.add(annotation);
-			}
-		}
-		return listAnnotations;
-	}
-	
-	//retrieve the whole context
-	public String queryContext(Model model) {
-		String context = "";
-		String queryString = Queries.CONTEXT.query();
-		Query query = QueryFactory.create(queryString);
-		try(QueryExecution qexec = QueryExecutionFactory.create(query, model)){
-			ResultSet result = qexec.execSelect();
-			while(result.hasNext()) {
-				QuerySolution sol = result.next();
-				context = sol.getLiteral("?context").getString();
-			}
-		}
-		return context;
-	}
-	
-	/*
-	 * NIF
-	 */
-	//look for the nif file of the subject resource
-	public void process(List<DBpediaRelation> listRelations, String nifPath, 
-			SentenceModel sentenceModel, TokenizerModel tokenizerModel, 
-			String fileName, String outputFolder) throws NoSuchAlgorithmException, IOException {
-		int counterEquals = 0;
-		int counterContains = 0;
-		String counters = "";
-		List<Report> listReport = new ArrayList<Report>();
-		Set<DBpediaRelation> notInAbstractList = new HashSet<DBpediaRelation>();
-		
-		System.out.println(listRelations.get(0).getTagetRelation());
-		
-		for(DBpediaRelation rel : listRelations) {
-			String[] sbjSplit = rel.getSbjURI().split("/");
-			String sbj = sbjSplit[sbjSplit.length-1];
-			String sbjAnchor = sbj.replaceAll("_", " ");
-			
-			String[] objSplit = rel.getObjURI().split("/");
-			String objAnchor = objSplit[objSplit.length-1].replaceAll("_", " ");
-
-			// System.out.println(sbjAnchor + "-" + objAnchor);
-			File filePath = lookNIFFile(sbj, nifPath);
-
-			// QUERIES
-			List<Annotation> listLinkAnnotations = new ArrayList<Annotation>();
-			BZip2CompressorInputStream inputStream = createBz2Reader(filePath);
-			if (inputStream == null) {
-				System.out.println("File \"" + filePath.getAbsolutePath() + "\"(" + sbj + ") does not exist");
-				continue;
-			}
-			Model model = createJenaModel(inputStream);
-			listLinkAnnotations.addAll(queryAbstractAnnotations(model));
-			counters = detectRelationsInSentence(listLinkAnnotations, listReport,
-					model,rel, sentenceModel, tokenizerModel, sbjAnchor, objAnchor);
-			int equals = Integer.parseInt(counters.split("-")[0]);
-			int contains = Integer.parseInt(counters.split("-")[1]);
-			counterEquals += equals;
-			counterContains += contains;
-			System.out.println("equals = " + equals + " \ncounterCountains = " + contains);
-			if(equals == 0 && contains == 0) {
-				notInAbstractList.add(rel);
-			}
-		}
-		// break;
-		System.out.println("File Name = " + fileName);
-		String[] counterApproach = countApproachFromReport(listReport).split("--");//sbj-obj--pronoun-obj
-		String[] counterExtraction = countExtractionFromReport(listReport).split("--");//in sentence -- in paragraph
-		int counterBlank = countBlankSentences(listReport);
-		writeReport(outputFolder,fileName,listReport, counterEquals, counterContains, notInAbstractList.size(),
-				counterApproach[0], counterApproach[1], counterExtraction[0], counterExtraction[1],
-				counterBlank);
-		
-		
-		System.out.println("number of equals: " + counterEquals);
-		System.out.println("number of contains: " + counterContains);
-		System.out.println("number of remaining relations: " + notInAbstractList.size());
-		
-	}
-
-	public String detectRelationsInSentence(List<Annotation> listLinkAnnotations, List<Report> listReport,
-			Model model, DBpediaRelation rel, SentenceModel sentenceModel, TokenizerModel tokenizerModel, 
-			String sbjAnchor, String objAnchor) throws IOException {
-		int counterEquals = 0; 
-		int counterContains = 0;
-		String approach = "";
-		String extraction = "";
-		String context = queryContext(model).replace("\n", " ");
-		for(Annotation ann : listLinkAnnotations) {
-			//ann.printAnnotation();
-			String[] listSentences;
-
-			Report report = new Report();
-			report.setSubject(rel.getSbjURI());
-			report.setObject(rel.getObjURI());
-			report.setRelation(rel.getPrdURI());
-			
-			report.setSection("Abstract");
-			
-			String[] paragraphIndexes = extractIndexes(ann.getParagraphURI()).split(","); //begin,end
-			String[] sectionIndexes = extractIndexes(ann.getSectionURI()).split(",");
-			
-			String abstractSec = context.substring(Integer.parseInt(sectionIndexes[0]),Integer.parseInt(sectionIndexes[1]));
-			String paragraph = context.substring(Integer.parseInt(paragraphIndexes[0]), Integer.parseInt(paragraphIndexes[1])); 
-			listSentences = sentenceDetector(sentenceModel,paragraph);
-//			System.out.println("Detect sentence for " + ann.getAnchor() + " and " + sbjAnchor);
-			
-			System.out.println("detecting subject ("+sbjAnchor+") in sentence: ");
-			
-			String selectSentences = detectInSentence(tokenizerModel, listSentences, ann.getAnchor(), sbjAnchor);
-			approach = "Sbj-Obj";
-			extraction = "In Sentence";
-			if(selectSentences.length() == 0) {
-				System.out.println("Detecting pronoun (he,she,his,her) in sentence: ");
-				approach = "Pronoun-Obj";
-				extraction = "In Sentence";
-				selectSentences = detectPronounInSentence(tokenizerModel, listSentences, objAnchor, sbjAnchor);
-			}
-			
-			if(selectSentences.length() == 0) {
-				System.out.println("Detecting relation using the whole paragraph. ");
-				approach = "Sbj-Obj";
-				extraction = "In Paragraph";
-				selectSentences = detectInParagraph(tokenizerModel, context, ann.getAnchor(), sbjAnchor);
-			}
-			
-			if(selectSentences.length() == 0) {
-				report.setBlankSentence("X");
-			}
-			
-			report.setContext(abstractSec);
-			report.setSentence(selectSentences);
-			
-			report.setExtraction(extraction);
-			report.setApproach(approach);
-			
-			if(ann.getAnchor().equalsIgnoreCase(objAnchor)) {
-				System.out.println("Equal = " + ann.getAnchor());
-				System.out.println("Sentence = " + selectSentences);
-				report.setKindOfMatch("Equal");
-				report.setAnchor(ann.getAnchor());
-				counterEquals++;
-				listReport.add(report);
-			}else if(ann.getAnchor().contains(objAnchor)) {
-				System.out.println("Contains = " + ann.getAnchor());
-				System.out.println("Sentence = " + selectSentences);
-				report.setKindOfMatch("Contains");
-				report.setAnchor(ann.getAnchor());
-				counterContains++;
-				listReport.add(report);
-			}
-		}
-//		System.out.println(counterEquals+"-"+counterContains);
-		return counterEquals+"-"+counterContains;
-	}
-	
-	
-	public File lookNIFFile(String sbj, String nifPath) throws NoSuchAlgorithmException {
-		String md5 = md5(sbj);
-		File filePath = new File(nifPath+"/"+mdf5ToPath(md5)+".ttl.bz2");
-		//System.out.println(filePath + " -- file exists? = " + filePath.exists());
-		return filePath;
-	}
-	
-	/*
-	 * OpenNLP
-	 */
-	
-	public String[] tokenExtraction(TokenizerModel model, String sbjAnchor)
-			throws InvalidFormatException, IOException {
-
-		TokenizerME tokenizer = new TokenizerME(model);
-		//int numCharacters = 0;
-
-		String tokens[] = tokenizer.tokenize(sbjAnchor);
-		//double tokenProbs[] = tokenizer.getTokenProbabilities();
-
-		return tokens;
-
-	}
-	
-	public String[] sentenceDetector(SentenceModel model, String paragraph) throws IOException {
-		SentenceDetectorME sdetector = new SentenceDetectorME(model);
-		String[] sentences = sdetector.sentDetect(paragraph);
-		return sentences;
-	}
-	
 	/*
 	 * Utilities
 	 */
@@ -432,281 +395,13 @@ public class RelationExtraction {
 		return URI;
 	}
 	
-	public String detectInSentence(TokenizerModel model, String[] listSentences, String objAnchor, 
-			String sbjAnchor) throws InvalidFormatException, IOException {
-		/*
-		 * A sentence is considered only if contains the subject and object
-		 * Subject must match one of their elements
-		 * Object must match complete to avoid inconsistencies
-		 */
-		System.out.println("Subject = " + sbjAnchor);
-		System.out.println("Object = " + objAnchor);
-		String sentence = "";
-		//int counter = 0;
-		for(String snt : listSentences) {
-//			System.out.println(counter++ + ".- sentence: \n" + snt);
-//			System.out.println("Paragraph = " + snt);
-			int sIndex = lookSbjIndex(model,snt,sbjAnchor);
-			int oIndex = lookObjIndex(model,snt,objAnchor);
-			System.out.println("sIndex = " + sIndex + " - oIndex = " + oIndex);
-			if(sIndex >= 0 && sIndex < oIndex) {
-				if(oIndex > 0)
-					oIndex += objAnchor.length();
-				if(oIndex > snt.length())
-					oIndex = snt.length();
-				System.out.println(sIndex + " -- " + oIndex + "--" + snt.length());
-				if(sIndex < oIndex ) {
-					sentence = snt.substring(sIndex, oIndex);
-					System.out.println("Sentence:\n"+sentence);
-					System.out.println();
-				}
-			}
-			System.out.println("\n\n");
-		}
-		return sentence;
+	public File lookNIFFile(String sbj, String nifPath) throws NoSuchAlgorithmException {
+		String md5 = md5(sbj);
+		File filePath = new File(nifPath+"/"+mdf5ToPath(md5)+".ttl.bz2");
+		//System.out.println(filePath + " -- file exists? = " + filePath.exists());
+		return filePath;
 	}
 	
-	public String detectInParagraph(TokenizerModel model, String paragraph, String objAnchor, 
-			String sbjAnchor) throws InvalidFormatException, IOException {
-		/*
-		 * A sentence is considered only if contains the subject and object
-		 * Subject must match one of their elements
-		 * Object must match complete to avoid inconsistencies
-		 */
-		System.out.println("Subject = " + sbjAnchor);
-		System.out.println("Object = " + objAnchor);
-		String sentence = "";
-		int sIndex = lookSbjIndex(model, paragraph, sbjAnchor);
-		int oIndex = lookObjIndex(model, paragraph, objAnchor);
-		System.out.println("sIndex = " + sIndex + " - oIndex = " + oIndex);
-		if (sIndex >= 0 && sIndex < oIndex) {
-			if (oIndex > 0)
-				oIndex += objAnchor.length();
-			if (oIndex > paragraph.length())
-				oIndex = paragraph.length();
-			System.out.println(sIndex + " -- " + oIndex + "--" + paragraph.length());
-			if (sIndex < oIndex) {
-				sentence = paragraph.substring(sIndex, oIndex);
-				System.out.println("Sentence:\n" + sentence);
-				System.out.println();
-			}
-		}
-		System.out.println("\n\n");
-		return sentence;
-	}
-	
-	public String detectPronounInSentence(TokenizerModel model, String[] listSentences, 
-			String objAnchor, String sbjAnchor) throws InvalidFormatException, IOException {
-		/*
-		 * The relation is hold by a pronoun (she is the mother of ...)
-		 * Subject must match a pronoun as he, she, his or her
-		 * Object must match complete to avoid inconsistencies
-		 */
-		
-		System.out.println("Object = " + objAnchor);
-		String sentence = "";
-		for(String snt : listSentences) {
-			String index = lookPronounSbjIndex(model, snt);
-			//System.out.println("----Index " + index);
-			int sIndex = Integer.parseInt(index.split("--")[0]);
-			String pronoun = "";
-			
-			if(!(sIndex == -1))
-				pronoun = index.split("--")[1];
-			
-			int oIndex = lookObjIndex(model,snt,objAnchor);
-			System.out.println("sIndex = " + sIndex + " - oIndex = " + oIndex);
-			if(sIndex >= 0 && sIndex < oIndex) {
-				if(oIndex > 0)
-					oIndex += objAnchor.length();
-				if(oIndex > snt.length())
-					oIndex = snt.length();
-				System.out.println(sIndex + " -- " + oIndex + "--" + snt.length());
-				if(sIndex < oIndex ) {
-					sentence = snt.substring(sIndex, oIndex);
-					sentence = "(**" + pronoun + "=" + sbjAnchor + "**): " + sentence;
-					System.out.println("Sentence:\n"+sentence);
-					System.out.println();
-				}
-			}
-			System.out.println("\n\n");
-		}
-		return sentence;
-	}
-	
-	public int lookSbjIndex(TokenizerModel model, String paragraph, String anchor) throws InvalidFormatException, IOException {
-		int index = 0;
-		int indexTemp = 0;
-		
-		paragraph = removeStopWords(paragraph).toLowerCase();
-//		System.out.println(paragraph);
-		String[] pt = tokenExtraction(model, paragraph);
-		
-		String clean = anchor.split("\\(")[0]; 
-		clean = removeStopWords(clean).toLowerCase();
-		String[] a = tokenExtraction(model,clean.toLowerCase());
-		
-		int pPos = 0;
-		String target = "";
-		boolean onlyOne = false;
-//		System.out.println("SUBJECT");
-		ext:for(int i = 0; i < pt.length; i++) {
-			for(int j = 0;  j < a.length; j++) {
-//				System.out.println(pt[i] + " vs. " + a[j] + " ? " + pt[i].contains(a[j]));
-				if(pt[i].equalsIgnoreCase(a[j])) {//add she, he, his, her
-					pPos = i;
-					target = pt[i];
-					onlyOne = true;
-					break ext;
-				}
-			}
-		}
-		
-		if(onlyOne) {
-			for(int i = 0 ; i < pPos; i++)
-				indexTemp += pt[i].length();
-//			System.out.println(paragraph);
-//			System.out.println(target);
-//			System.out.println(indexTemp);
-			
-			index = paragraph.indexOf(target,indexTemp);
-//			System.out.println(index);
-//			System.out.println();
-		}else
-			index = -1;
-		
-		return index;
-	}
-	
-	public String lookPronounSbjIndex(TokenizerModel model, String paragraph) throws InvalidFormatException, IOException {
-		String index = "";
-		int indexTemp = 0;
-		
-		paragraph = removeStopWords(paragraph).toLowerCase();
-//		System.out.println(paragraph);
-		String[] pt = tokenExtraction(model, paragraph);
-		
-		String pronoun = detectPronoun(pt);
-		
-		int pPos = 0;
-		String target = "";
-		boolean onlyOne = false;
-//		System.out.println("SUBJECT");
-		for (int i = 0; i < pt.length; i++) {
-			// System.out.println(pt[i] + " vs. " + a[j] + " ? " + pt[i].contains(a[j]));
-			if (pt[i].equals(pronoun)) {// add she, he, his, her
-				pPos = i;
-				target = pt[i];
-				onlyOne = true;
-				break;
-			}
-		}
-		
-		if(onlyOne) {
-			for(int i = 0 ; i < pPos; i++)
-				indexTemp += pt[i].length();
-//			System.out.println(paragraph);
-//			System.out.println(target);
-//			System.out.println(indexTemp);
-			
-			index = paragraph.indexOf(target,indexTemp)+"--"+pronoun;
-//			System.out.println(index);
-//			System.out.println();
-		}else
-			index = -1 + "--000";
-		
-		return index;
-	}
-	
-	public int lookObjIndex(TokenizerModel model, String paragraph, String anchor) throws InvalidFormatException, IOException {
-		int index = 0;
-		int indexTemp = 0;
-		
-		paragraph = removeStopWords(paragraph).toLowerCase();
-		
-		String[] pt = tokenExtraction(model, paragraph);
-		
-		//String clean = anchor.split("\\(")[0];
-		//clean = removeStopWords(clean).toLowerCase();
-		
-		//String[] a = tokenExtraction(model,clean);
-		anchor = removeStopWords(anchor).toLowerCase();
-		String[] a = tokenExtraction(model,anchor);
-		int pPos = 0;
-		String target = "";
-		boolean allIn = false;
-		
-		System.out.println("===OBJECT===");
-		
-		ext:for(int i = 0; i < pt.length; i++) {
-			if(a.length == 1) {
-				if(pt[i].contains(a[0])) {
-					pPos = i;
-					target = pt[i];
-					allIn = true;
-					break;
-				}
-			}else {
-				for(int j = 1;  j < a.length; j++) {
-					System.out.println(pt[i] + " - " + a[0] + " contains? = " + pt[i].contains(a[0]));
-					if(!pt[i].contains(a[0]))
-						break;
-					pPos = i;
-					target = pt[i];
-					for(int k = i+1; k < pt.length && j < a.length; k++, j++) {
-						System.out.println(pt[k] + " - " + a[j] + " contains? = " + pt[k].contains(a[j]));
-						if(pt[k].contains(a[j])) {
-							allIn = true;
-						}else {
-							allIn = false;
-							break;
-						}
-					}
-				}
-			}
-			
-			if(allIn)
-				break ext;
-			
-		}
-		if(allIn) {
-			
-			for(int i = 0; i < pPos; i++)
-				indexTemp += pt[i].length();
-			System.out.println("\n\n"+paragraph);
-			System.out.println(target);
-			System.out.println(indexTemp);
-			
-			index = paragraph.indexOf(anchor.toLowerCase(),indexTemp);
-			
-			System.out.println(index);
-			System.out.println();
-		}else
-			index = -1;
-		System.out.println("===End Object===\n\n");
-//		System.out.println("index returned = " + index);
-		return index;
-	}
-	
-	public String detectPronoun(String[] tokens) {
-		String pronoun = "";
-		for(String token : tokens) {
-			if(token.equals("he")) {
-				pronoun = "he";
-				break;
-			}else if(token.equals("she")) {
-				pronoun = "she";
-				break;
-			}else if(token.equals("his")) { 
-				pronoun = "his";
-				break;
-			}else if(token.equals("her")) {
-				pronoun = "her";
-				break;
-			}
-		}
-		return pronoun;
-	}
 	
 	public List<String> processedFiles(File[] listFiles){
 		List<String> listProcessed = new ArrayList<String>();
@@ -715,21 +410,6 @@ public class RelationExtraction {
 				listProcessed.add(f.getName().split("-")[0]);
 		}
 		return listProcessed;
-	}
-	
-	public String removeStopWords(String target) {
-//		System.out.println(stopWordsPattern);
-		//Pattern pattern = Pattern.compile("\\b(?:"+stopWordsPattern+")\\b\\s*",Pattern.CASE_INSENSITIVE);
-//		Matcher matcher = pattern.matcher(target);
-		for(String mark : punctuationMarks) {
-			target = target.replaceAll(mark, " ");
-		}
-//		System.out.println(target);
-		return target;
-	}
-	
-	public String extractIndexes(String paragraphURI) {
-		return paragraphURI.split("char=")[1];
 	}
 	
 	public String readSparqlQueries(File inputFile){
@@ -780,23 +460,28 @@ public class RelationExtraction {
 		return fileModel;
 	}
 	
-	public void writeReport(String outputFolder,String fileName,List<Report> listReport, int numEquals, 
+	public void writeReport(File outputFolder,String fileName,List<Report> listReport, int numEquals, 
 			int numContains, int notInAbstractList, String sbjObj, String pronounObj,
-			String sentence, String paragraph, int counterBlank) {
+			String sentence, String paragraph, int counterBlank, List<String> listArticlesNotFound) {
 		try(PrintWriter pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(outputFolder+"/"+fileName+"-report.csv"),StandardCharsets.UTF_8))) {
-			pw.write("number of equals = " + numEquals + "\n");
-			pw.write("number of contains = " + numContains + "\n");
-			pw.write("notInAbstractList = " + notInAbstractList + "\n");
+			pw.write("number of equals =\t" + numEquals + "\n");
+			pw.write("number of contains =\t" + numContains + "\n");
+			pw.write("notInAbstractList =\t" + notInAbstractList + "\n");
 			pw.write("Appoaches:\n");
-			pw.write("\tSbj-Obj = " + sbjObj + "\n");
-			pw.write("\tPronoun-Obj = " + pronounObj + "\n");
+			pw.write("\tSbj-Obj =\t" + sbjObj + "\n");
+			pw.write("\tPronoun-Obj =\t" + pronounObj + "\n");
 			pw.write("Extraction:\n");
-			pw.write("\tIn Sentence = " + sentence + "\n");
-			pw.write("\tIn Paragraph = " + paragraph + "\n");
-			pw.write("Blank Sentences = " + counterBlank + "\n");
-			
+			pw.write("\tIn Sentence =\t" + sentence + "\n");
+			pw.write("\tIn Paragraph =\t" + paragraph + "\n");
+			pw.write("Blank Sentences =\t" + counterBlank + "\n");
+			pw.write("Number of articles not found in 2016-10 wikipedia nif version =\t" + listArticlesNotFound.size() + "\t");
+			for(String article : listArticlesNotFound) {
+				pw.write(article.split("--")[0]+",");
+			}
+			pw.write("\n");
 			pw.write("Kind of Match\t"
 					+ "Section\t"
+					+ "Section Title\t"
 					+ "Extraction\t"
 					+ "Approach\t"
 					+ "Blank Sentence\t"
@@ -815,5 +500,23 @@ public class RelationExtraction {
 		}
 	}
 	
-
+	public void writeNotInAbstractRelations(File output, String fileName, List<DBpediaRelation> notInAbstractList) {
+		try(PrintWriter pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(output+"/"+fileName), StandardCharsets.UTF_8))){
+			pw.write("subject\tpredicate\tobject\tcontext\n");
+			for(DBpediaRelation rel : notInAbstractList) {
+				pw.write(rel.printRelation() + "\n");
+			}
+			pw.close();
+		}catch(IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void writeTime(File output, String fileName, String relation, String timeElapsed) {
+		try(PrintWriter pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(output+"/"+fileName,true),StandardCharsets.UTF_8))){
+			pw.write(relation+"\t"+timeElapsed+"\n");
+		}catch(IOException e) {
+			e.printStackTrace();
+		}
+	}
 }
