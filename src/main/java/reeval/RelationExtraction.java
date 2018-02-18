@@ -95,7 +95,7 @@ public class RelationExtraction {
 		listProcessed.addAll(re.processedFiles(outputFiles));
 		
 		for(File file : sparqlFiles) {
-			if(!file.getName().contains("Employer") && !file.getName().contains("SchoolAttended") && !file.getName().contains("Siblings"))
+			if(!file.getName().contains("Spouse"))
 				continue;
 //			if(listProcessed.contains(file.getName().replace(".rq", ""))) {
 //				System.out.println("File " + file.getName().replace(".rq", "") + " was already processed.");
@@ -161,6 +161,10 @@ public class RelationExtraction {
 	public void lookRelationsInAbstract(List<DBpediaRelation> listRelations, String nifPath, 
 			SentenceModel sentenceModel, TokenizerModel tokenizerModel, 
 			String fileName, File outputFolder) throws NoSuchAlgorithmException, IOException, InterruptedException {
+		
+		listReport.clear();
+		counterEquals = 0;
+		counterContains = 0;
 		
 		List<Thread> listThreads = new ArrayList<Thread>();
 		List<String> listArticlesNotFound = new ArrayList<String>();
@@ -259,7 +263,7 @@ public class RelationExtraction {
 			File filePath = lookNIFFile(sbj, nifPath);
 
 			// QUERIES
-			List<Annotation> listLinkAnnotations = new ArrayList<Annotation>();
+			
 			BZip2CompressorInputStream inputStream = createBz2Reader(filePath);
 			if (inputStream == null) {
 				logger.info("File \"" + filePath.getAbsolutePath() + "\"(" + sbj + ") does not exist");
@@ -276,7 +280,7 @@ public class RelationExtraction {
 			int sectionCounter = 0;
 			System.out.println("Relation processing/processed = " + counterRels++ +"/" + listRelations.size());
 			for(Map.Entry<String,String> entry : mapSections.entrySet()) { 
-				listLinkAnnotations.clear();
+				List<Annotation> listLinkAnnotations = new ArrayList<Annotation>();
 				listLinkAnnotations.addAll(sq.querySectionAnnotations(model,entry.getKey()));
 				logger.info("number of annotations for section "+ entry.getKey() +" = " + listLinkAnnotations.size());
 				//System.out.println("processing section number = " + entry.getKey() + " (" + entry.getValue() + ")");
