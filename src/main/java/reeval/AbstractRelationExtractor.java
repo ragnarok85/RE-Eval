@@ -38,8 +38,6 @@ public class AbstractRelationExtractor extends Thread{
 //	private static List<DBpediaRelation> notInAbstractList = new ArrayList<DBpediaRelation>();
 //	private List<Report> listReport = new ArrayList<Report>();
 	
-	private SentenceModel sentenceModel;
-	private TokenizerModel tokenizerModel;
 	private DBpediaRelation relation;
 	private Model model;
 	private TextSearcher ts = new TextSearcher();
@@ -50,14 +48,11 @@ public class AbstractRelationExtractor extends Thread{
 	}
 	
 	public AbstractRelationExtractor(String sbjAnchor, String objAnchor, String numSection,
-			String titleSection, Model model, SentenceModel sentenceModel,
-			TokenizerModel tokenizerModel, DBpediaRelation relation, List<Annotation> listLinkAnnotations) {
+			String titleSection, Model model, DBpediaRelation relation, List<Annotation> listLinkAnnotations) {
 		this.sbjAnchor = sbjAnchor;
 		this.objAnchor = objAnchor;
 		this.numSection = numSection;
 		this.titleSection = titleSection;
-		this.sentenceModel = sentenceModel;
-		this.tokenizerModel = tokenizerModel;
 		this.model = model;
 //		this.filePath = filePath;
 		this.relation = relation;
@@ -74,7 +69,7 @@ public class AbstractRelationExtractor extends Thread{
 			try {
 //				System.out.println("NumSection = " + numSection + "\nTitleSection = " + titleSection);
 				counters = ts.detectRelationsInSentence(listLinkAnnotations,listReport,model,relation,
-						sentenceModel,tokenizerModel,sbjAnchor,objAnchor,numSection,titleSection);
+						sbjAnchor,objAnchor,numSection,titleSection);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
