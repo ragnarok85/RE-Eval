@@ -25,8 +25,6 @@ import objects.Annotation;
 import objects.DBpediaRelation;
 import objects.REStats;
 import objects.Report;
-import opennlp.tools.sentdetect.SentenceModel;
-import opennlp.tools.tokenize.TokenizerModel;
 import opennlp.tools.util.InvalidFormatException;
 
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
@@ -37,16 +35,6 @@ import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.SKOS;
 import org.apache.log4j.Logger;
 
-<<<<<<< HEAD
-=======
-import objects.Annotation;
-import objects.DBpediaRelation;
-import objects.REStats;
-import objects.Report;
-import opennlp.tools.sentdetect.SentenceModel;
-import opennlp.tools.tokenize.TokenizerModel;
-import opennlp.tools.util.InvalidFormatException;
->>>>>>> refs/remotes/origin/master
 import sparql.SparqlQueries;
 
 public class RelationExtraction {
