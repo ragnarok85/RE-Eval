@@ -26,8 +26,8 @@ public class TextSearcher {
 	}
 	
 	public String detectRelationsInSentence(List<Annotation> listLinkAnnotations, List<Report> listReport,
-			Model model, DBpediaRelation rel, SentenceModel sentenceModel, TokenizerModel tokenizerModel, 
-			String sbjAnchor, String objAnchor, String notation, String secTitle) throws IOException {
+			Model model, DBpediaRelation rel, String sbjAnchor, String objAnchor, String notation, 
+			String secTitle) throws IOException {
 		int counterEquals = 0; 
 		int counterContains = 0;
 		String approach = "";
@@ -61,28 +61,28 @@ public class TextSearcher {
 			
 			String sectionText = context.substring(Integer.parseInt(sectionIndexes[0]),sectionEndIndex);
 			String paragraph = context.substring(Integer.parseInt(paragraphIndexes[0]), paragraphEndIndex); 
-			listSentences = tp.sentenceDetector(sentenceModel,paragraph);
+			listSentences = tp.sentenceDetector(paragraph);
 			rel.setSbjAbstract(sectionText);
 			
 //			System.out.println("Detect sentence for " + ann.getAnchor() + " and " + sbjAnchor);
 			
 //			System.out.println("detecting subject ("+sbjAnchor+") in sentence: ");
 			
-			String selectSentences = detectInSentence(tokenizerModel, listSentences, sbjAnchor, object);
+			String selectSentences = detectInSentence(listSentences, sbjAnchor, object);
 			approach = "Sbj-Obj";
 			extraction = "In Sentence";
 			if(selectSentences.length() == 0) {
 //				System.out.println("Detecting pronoun (he,she,his,her) in sentence: ");
 				approach = "Pronoun-Obj";
 				extraction = "In Sentence";
-				selectSentences = detectPronounInSentence(tokenizerModel, listSentences, objAnchor, sbjAnchor);
+				selectSentences = detectPronounInSentence(listSentences, objAnchor, sbjAnchor);
 			}
 			
 			if(selectSentences.length() == 0) {
 //				System.out.println("Detecting relation using the whole paragraph. ");
 				approach = "Sbj-Obj";
 				extraction = "In Paragraph";
-				selectSentences = detectInParagraph(tokenizerModel, context, object, sbjAnchor);
+				selectSentences = detectInParagraph(context, object, sbjAnchor);
 			}
 			
 			if(selectSentences.length() == 0) {
@@ -141,7 +141,7 @@ public class TextSearcher {
 		return pronoun;
 	}
 	
-	public String detectPronounInSentence(TokenizerModel model, String[] listSentences, 
+	public String detectPronounInSentence(String[] listSentences, 
 			String objAnchor, String sbjAnchor) throws InvalidFormatException, IOException {
 		/*
 		 * The relation is hold by a pronoun (she is the mother of ...)
@@ -152,7 +152,7 @@ public class TextSearcher {
 //		System.out.println("Object = " + objAnchor);
 		String sentence = "";
 		for(String snt : listSentences) {
-			String index = lookPronounSbjIndex(model, snt);
+			String index = lookPronounSbjIndex(snt);
 			//System.out.println("----Index " + index);
 			int sIndex = Integer.parseInt(index.split("--")[0]);
 			String pronoun = "";
@@ -160,7 +160,7 @@ public class TextSearcher {
 			if(!(sIndex == -1))
 				pronoun = index.split("--")[1];
 			
-			int oIndex = lookObjIndex(model,snt,objAnchor);
+			int oIndex = lookObjIndex(snt,objAnchor);
 //			System.out.println("sIndex = " + sIndex + " - oIndex = " + oIndex);
 			if(sIndex >= 0 && sIndex < oIndex) {
 				if(oIndex > 0)
@@ -180,7 +180,7 @@ public class TextSearcher {
 		return sentence;
 	}
 	
-	public String detectInSentence(TokenizerModel tokenizerModel, String[] listSentences, String sbjAnchor, 
+	public String detectInSentence(String[] listSentences, String sbjAnchor, 
 			String objAnchor) throws InvalidFormatException, IOException {
 		/*
 		 * A sentence is considered only if contains the subject and object
@@ -194,8 +194,8 @@ public class TextSearcher {
 		for(String snt : listSentences) {
 //			System.out.println(counter++ + ".- sentence: \n" + snt);
 //			System.out.println("Paragraph = " + snt);
-			int sIndex = lookSbjIndex(tokenizerModel,snt,sbjAnchor);
-			int oIndex = lookObjIndex(tokenizerModel,snt,objAnchor);
+			int sIndex = lookSbjIndex(snt,sbjAnchor);
+			int oIndex = lookObjIndex(snt,objAnchor);
 //			System.out.println("sIndex = " + sIndex + " - oIndex = " + oIndex);
 			if(sIndex >= 0 && sIndex < oIndex) {
 				if(oIndex > 0)
@@ -214,7 +214,7 @@ public class TextSearcher {
 		return sentence;
 	}
 	
-	public String detectInParagraph(TokenizerModel model, String paragraph, String objAnchor, 
+	public String detectInParagraph(String paragraph, String objAnchor, 
 			String sbjAnchor) throws InvalidFormatException, IOException {
 		/*
 		 * A sentence is considered only if contains the subject and object
@@ -224,8 +224,8 @@ public class TextSearcher {
 //		System.out.println("Subject = " + sbjAnchor);
 //		System.out.println("Object = " + objAnchor);
 		String sentence = "";
-		int sIndex = lookSbjIndex(model, paragraph, sbjAnchor);
-		int oIndex = lookObjIndex(model, paragraph, objAnchor);
+		int sIndex = lookSbjIndex(paragraph, sbjAnchor);
+		int oIndex = lookObjIndex(paragraph, objAnchor);
 //		System.out.println("sIndex = " + sIndex + " - oIndex = " + oIndex);
 		if (sIndex >= 0 && sIndex < oIndex) {
 			if (oIndex > 0)
@@ -247,20 +247,20 @@ public class TextSearcher {
 		return paragraphURI.split("char=")[1];
 	}
 	
-	public int lookObjIndex(TokenizerModel model, String sentence, String anchor) throws InvalidFormatException, IOException {
+	public int lookObjIndex(String sentence, String anchor) throws InvalidFormatException, IOException {
 		int index = 0;
 		int indexTemp = 0;
 		
 		sentence = tp.removeStopWords(sentence).toLowerCase();
 		
-		String[] st = tp.tokenExtraction(model, sentence);
+		String[] st = tp.tokenExtraction(sentence);
 		
 		//String clean = anchor.split("\\(")[0];
 		//clean = removeStopWords(clean).toLowerCase();
 		
 		//String[] a = tokenExtraction(model,clean);
 		anchor = tp.removeStopWords(anchor).toLowerCase();
-		String[] a = tp.tokenExtraction(model,anchor);
+		String[] a = tp.tokenExtraction(anchor);
 		int pPos = 0;
 		String target = "";
 		boolean allIn = false;
@@ -319,17 +319,17 @@ public class TextSearcher {
 		return index;
 	}
 	
-	public int lookSbjIndex(TokenizerModel tokenizerModel, String sentence, String anchor) throws InvalidFormatException, IOException {
+	public int lookSbjIndex(String sentence, String anchor) throws InvalidFormatException, IOException {
 		int index = 0;
 		int indexTemp = 0;
 		
 		sentence = tp.removeStopWords(sentence).toLowerCase();
 //		System.out.println(paragraph);
-		String[] pt = tp.tokenExtraction(tokenizerModel, sentence);
+		String[] pt = tp.tokenExtraction(sentence);
 		
 		String clean = anchor.split("\\(")[0]; //remove parenthesis
 		clean = tp.removeStopWords(clean).toLowerCase(); //replace stop words by empty spaces
-		String[] a = tp.tokenExtraction(tokenizerModel,clean.toLowerCase());
+		String[] a = tp.tokenExtraction(clean.toLowerCase());
 		
 		int pPos = 0;
 		String target = "";
@@ -363,13 +363,13 @@ public class TextSearcher {
 		return index;
 	}
 	
-	public String lookPronounSbjIndex(TokenizerModel model, String paragraph) throws InvalidFormatException, IOException {
+	public String lookPronounSbjIndex(String paragraph) throws InvalidFormatException, IOException {
 		String index = "";
 		int indexTemp = 0;
 		
 		paragraph = tp.removeStopWords(paragraph).toLowerCase();
 //		System.out.println(paragraph);
-		String[] pt = tp.tokenExtraction(model, paragraph);
+		String[] pt = tp.tokenExtraction(paragraph);
 		
 		String pronoun = detectPronoun(pt); //he, she, his, her
 		

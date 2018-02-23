@@ -1,5 +1,7 @@
 package text;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import opennlp.tools.sentdetect.SentenceDetectorME;
@@ -11,21 +13,57 @@ import opennlp.tools.util.InvalidFormatException;
 public class TextPreprocessor {
 
 	private String[] punctuationMarks = {",","'",":","-","!","~","\\(","\\)","\\.","\"",";","\""};
+	private SentenceModel sentenceModel = null;
+	private TokenizerModel tokenizerModel = null;
+//	public TextPreprocessor() {
+//		// TODO Auto-generated constructor stub
+//	}
 	
 	public TextPreprocessor() {
-		// TODO Auto-generated constructor stub
+		FileInputStream enTokenizerModel = null;
+		try {
+			enTokenizerModel = readOpenNLPModel("OpenNLP/Models/Tokenizer/en-token.bin");
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		FileInputStream enSentenceModel = null;
+		try {
+			enSentenceModel = readOpenNLPModel("OpenNLP/Models/SentenceDetector/en-sent.bin");
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			sentenceModel = new SentenceModel(enSentenceModel);
+			tokenizerModel = new TokenizerModel(enTokenizerModel);
+		} catch (InvalidFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
+	private FileInputStream readOpenNLPModel(String pathToModel) throws FileNotFoundException {
+		ClassLoader classLoader = getClass().getClassLoader();
+		FileInputStream fileModel = null;
+		fileModel = new FileInputStream(classLoader.getResource(pathToModel).getFile());
+		return fileModel;
 	}
 
-	public String[] sentenceDetector(SentenceModel model, String paragraph) throws IOException {
-		SentenceDetectorME sdetector = new SentenceDetectorME(model);
+	public String[] sentenceDetector(String paragraph) throws IOException {
+		SentenceDetectorME sdetector = new SentenceDetectorME(sentenceModel);
 		String[] sentences = sdetector.sentDetect(paragraph);
 		return sentences;
 	}
 	
-	public String[] tokenExtraction(TokenizerModel model, String sbjAnchor)
+	public String[] tokenExtraction(String sbjAnchor)
 			throws InvalidFormatException, IOException {
 
-		TokenizerME tokenizer = new TokenizerME(model);
+		TokenizerME tokenizer = new TokenizerME(tokenizerModel);
 		//int numCharacters = 0;
 
 		String tokens[] = tokenizer.tokenize(sbjAnchor);

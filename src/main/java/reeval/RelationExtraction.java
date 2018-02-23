@@ -37,6 +37,16 @@ import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.SKOS;
 import org.apache.log4j.Logger;
 
+<<<<<<< HEAD
+=======
+import objects.Annotation;
+import objects.DBpediaRelation;
+import objects.REStats;
+import objects.Report;
+import opennlp.tools.sentdetect.SentenceModel;
+import opennlp.tools.tokenize.TokenizerModel;
+import opennlp.tools.util.InvalidFormatException;
+>>>>>>> refs/remotes/origin/master
 import sparql.SparqlQueries;
 
 public class RelationExtraction {
@@ -70,21 +80,15 @@ public class RelationExtraction {
 		File outputNotInSection = new File(outputFolder.getAbsoluteFile()+"/notInSection");
 		File outputSections = new File(outputFolder.getAbsoluteFile()+"/Sections");
 		File[] outputFiles = outputFolder.listFiles();
+		String nifPath = args[1];
 		
 		List<String> listProcessed = new ArrayList<String>();
 		List<DBpediaRelation> notInAbstractList = new ArrayList<DBpediaRelation>();
 		List<DBpediaRelation> notInSectionList = new ArrayList<DBpediaRelation>();
-		
-		String nifPath = args[1];
-				
-		RelationExtraction re = new RelationExtraction();
-		FileInputStream enTokenizerModel = re.readOpenNLPModel("OpenNLP/Models/Tokenizer/en-token.bin");
-		FileInputStream enSentenceModel = re.readOpenNLPModel("OpenNLP/Models/SentenceDetector/en-sent.bin");
-		SentenceModel sentenceModel = new SentenceModel(enSentenceModel);
-		TokenizerModel tokenizerModel = new TokenizerModel(enTokenizerModel);
-		
 		Map<String,String> mapSparqlQueries = new HashMap<String,String>();
 		List<REStats> listStats = new ArrayList<REStats>();
+		
+		RelationExtraction re = new RelationExtraction();
 		
 		listProcessed.addAll(re.processedFiles(outputFiles));
 		
@@ -112,7 +116,7 @@ public class RelationExtraction {
 //					sentenceModel, tokenizerModel, entry.getKey(), outputSections));
 			logger.info("Beging Abstract");
 			re.lookRelationsInAbstract(listRelations, nifPath, 
-					sentenceModel, tokenizerModel, entry.getKey(), outputAbstract);
+					entry.getKey(), outputAbstract);
 			notInAbstractList.addAll(notInList);
 			notInList.clear();
 			logger.info("relations not found in abstract = " + notInAbstractList.size());
@@ -125,11 +129,12 @@ public class RelationExtraction {
 	    		    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(endTime)));
 			re.writeTime(outputFolder, "AbstractTime.csv", entry.getKey(), timeElapsed);
 			logger.info("End Abstract");
+
 			logger.info("Begin Section");
 			initialTime = System.currentTimeMillis();
 			if(!notInAbstractList.isEmpty()) {
 				notInSectionList.addAll(re.lookRelationsInSection(notInAbstractList, nifPath, 
-					sentenceModel, tokenizerModel, entry.getKey(), outputSections));
+					entry.getKey(), outputSections));
 				re.writeNotInAbstractRelations(outputNotInSection, entry.getKey(), 
 						notInSectionList);
 			}
@@ -153,7 +158,6 @@ public class RelationExtraction {
 	 */
 	//look for the nif file of the subject resource
 	public void lookRelationsInAbstract(List<DBpediaRelation> listRelations, String nifPath, 
-			SentenceModel sentenceModel, TokenizerModel tokenizerModel, 
 			String fileName, File outputFolder) throws NoSuchAlgorithmException, IOException, InterruptedException {
 		
 		listReport.clear();
@@ -196,7 +200,7 @@ public class RelationExtraction {
 			listLinkAnnotations.addAll(sq.queryAbstractAnnotations(model));
 			
 			AbstractRelationExtractor are = new AbstractRelationExtractor(sbjAnchor,objAnchor,"0","Abstract",
-					model, sentenceModel, tokenizerModel, rel, listLinkAnnotations);
+					model, rel, listLinkAnnotations);
 			listThreads.add(are);
 			are.start();
 			//System.out.println("threads running: " + Thread.activeCount());
@@ -222,7 +226,6 @@ public class RelationExtraction {
 	}
 	
 	public Set<DBpediaRelation> lookRelationsInSection(List<DBpediaRelation> listRelations, String nifPath, 
-			SentenceModel sentenceModel, TokenizerModel tokenizerModel, 
 			String fileName, File outputFolder) throws NoSuchAlgorithmException, IOException, InterruptedException {
 		
 		listReport.clear();
@@ -281,7 +284,7 @@ public class RelationExtraction {
 				if(listLinkAnnotations.size() == 0)
 					continue;
 				AbstractRelationExtractor are = new AbstractRelationExtractor(sbjAnchor,objAnchor,entry.getKey(),
-						entry.getValue(), model, sentenceModel, tokenizerModel, rel, listLinkAnnotations);
+						entry.getValue(), model, rel, listLinkAnnotations);
 				listThreads.add(are);
 				are.start(); 
 				System.out.println("\tSections processing/processed = " + sectionCounter++ +"/" + mapSections.size());
