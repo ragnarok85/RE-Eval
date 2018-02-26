@@ -21,6 +21,15 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
+import objects.Annotation;
+import objects.Article;
+import objects.DBpediaRelation;
+import objects.Paragraph;
+import objects.REStats;
+import objects.Report;
+import objects.Section;
+import opennlp.tools.util.InvalidFormatException;
+
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
@@ -29,12 +38,6 @@ import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.SKOS;
 import org.apache.log4j.Logger;
 
-import objects.Annotation;
-import objects.Article;
-import objects.DBpediaRelation;
-import objects.REStats;
-import objects.Report;
-import opennlp.tools.util.InvalidFormatException;
 import sparql.SparqlQueries;
 
 public class RelationExtraction {
@@ -161,6 +164,8 @@ public class RelationExtraction {
 		int counterRels = 0;
 		for(DBpediaRelation rel : listRelations) {
 			
+			Article article = new Article();
+			
 			String[] sbjSplit = rel.getSbjURI().split("/");
 			String sbj = sbjSplit[sbjSplit.length-1];
 			String sbjAnchor = sbj.replaceAll("_", " ");
@@ -191,10 +196,20 @@ public class RelationExtraction {
 			Model model = createJenaModel(inputStream);
 			
 			//TODO query for context
-			String context = sq.queryContext(model);
+			article.setName(fileName);
+			article.setContext(sq.queryContext(model));
 			//TODO query for sections
+			article.setListSections(sq.queryOrderSection(model));
 			//TODO query for paragraphs
+			for(Section s : article.getListSections()){
+				s.setListParagraphs(sq.queryOrdererParagraph(model, s.getSectionURI()));
+			}
 			//TODO The query for annotations is made in the following lines
+			for(Section s: article.getListSections()){
+				for(Paragraph p : s.getListParagraphs()){
+					p.setListAnnotations(sq.queryOrderAnnotation(model, p.getParagraphURI()));
+				}
+			}
 			//Abstract
 			listLinkAnnotations.addAll(sq.queryAbstractAnnotations(model));
 			
