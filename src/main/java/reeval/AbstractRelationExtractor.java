@@ -32,11 +32,8 @@ public class AbstractRelationExtractor extends Thread{
 	private String objAnchor;
 	private String numSection;
 	private String titleSection;
-//	private File filePath;
 	
 	private List<Annotation> listLinkAnnotations = new ArrayList<Annotation>();
-//	private static List<DBpediaRelation> notInAbstractList = new ArrayList<DBpediaRelation>();
-//	private List<Report> listReport = new ArrayList<Report>();
 	
 	private DBpediaRelation relation;
 	private Model model;
@@ -44,7 +41,6 @@ public class AbstractRelationExtractor extends Thread{
 	private SparqlQueries sq = new SparqlQueries();
 	
 	public AbstractRelationExtractor() {
-		// TODO Auto-generated constructor stub
 	}
 	
 	public AbstractRelationExtractor(String sbjAnchor, String objAnchor, String numSection,
@@ -54,7 +50,6 @@ public class AbstractRelationExtractor extends Thread{
 		this.numSection = numSection;
 		this.titleSection = titleSection;
 		this.model = model;
-//		this.filePath = filePath;
 		this.relation = relation;
 		this.listLinkAnnotations.addAll(listLinkAnnotations);
 		

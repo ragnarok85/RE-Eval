@@ -21,12 +21,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-import objects.Annotation;
-import objects.DBpediaRelation;
-import objects.REStats;
-import objects.Report;
-import opennlp.tools.util.InvalidFormatException;
-
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
@@ -35,6 +29,12 @@ import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.SKOS;
 import org.apache.log4j.Logger;
 
+import objects.Annotation;
+import objects.Article;
+import objects.DBpediaRelation;
+import objects.REStats;
+import objects.Report;
+import opennlp.tools.util.InvalidFormatException;
 import sparql.SparqlQueries;
 
 public class RelationExtraction {
@@ -81,7 +81,7 @@ public class RelationExtraction {
 		listProcessed.addAll(re.processedFiles(outputFiles));
 		
 		for(File file : sparqlFiles) {
-			if(!file.getName().contains("Spouse"))
+			if(!file.getName().contains("PartyAffiliation"))
 				continue;
 //			if(listProcessed.contains(file.getName().replace(".rq", ""))) {
 //				System.out.println("File " + file.getName().replace(".rq", "") + " was already processed.");
@@ -92,6 +92,7 @@ public class RelationExtraction {
 			mapSparqlQueries.put(file.getName().replace(".rq", ""),query);
 			
 		}
+		
 		for(Map.Entry<String, String> entry : mapSparqlQueries.entrySet()) {
 			logger.info("Processing file: " + entry.getKey());
 			Long initialTime = System.currentTimeMillis();
@@ -171,9 +172,13 @@ public class RelationExtraction {
 			String[] objSplit = rel.getObjURI().split("/");
 			String objAnchor = objSplit[objSplit.length-1].replaceAll("_", " ");
 
+			//TODO Create an Article object with name attribute as the file name
+			
 			// System.out.println(sbjAnchor + "-" + objAnchor);
 			File filePath = lookNIFFile(sbj, nifPath);
-
+			
+			
+			
 			// QUERIES
 			List<Annotation> listLinkAnnotations = new ArrayList<Annotation>();
 			BZip2CompressorInputStream inputStream = createBz2Reader(filePath);
@@ -184,8 +189,16 @@ public class RelationExtraction {
 			}
 			
 			Model model = createJenaModel(inputStream);
+			
+			//TODO query for context
+			String context = sq.queryContext(model);
+			//TODO query for sections
+			//TODO query for paragraphs
+			//TODO The query for annotations is made in the following lines
 			//Abstract
 			listLinkAnnotations.addAll(sq.queryAbstractAnnotations(model));
+			
+			//TODO filter annotations to those which contains or are equal to the object
 			
 			AbstractRelationExtractor are = new AbstractRelationExtractor(sbjAnchor,objAnchor,"0","Abstract",
 					model, rel, listLinkAnnotations);

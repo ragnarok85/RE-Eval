@@ -41,7 +41,7 @@ public class SparqlQueries {
 				Annotation annotation = new Annotation();
 				QuerySolution sol = result.next();
 				annotation.setAnchor(sol.getLiteral("?anchor").getString());
-				annotation.setURI(sol.getResource("?s").getURI());
+				annotation.setUri(sol.getResource("?s").getURI());
 				annotation.setParagraphURI(sol.getResource("?lsuper").getURI()); //linkSuperString --> Paragraph
 				annotation.setSectionURI(sol.getResource("?psuper").getURI());//paragraphSuperString --> Section
 				annotation.setNotation(sol.getLiteral("?notation").getString());
@@ -148,7 +148,7 @@ public class SparqlQueries {
 				Annotation annotation = new Annotation();
 				QuerySolution sol = result.next();
 				annotation.setAnchor(sol.getLiteral("?anchor").getString());
-				annotation.setURI(sol.getResource("?s").getURI());
+				annotation.setUri(sol.getResource("?s").getURI());
 				annotation.setParagraphURI(sol.getResource("?lsuper").getURI()); //linkSuperString --> Paragraph
 				annotation.setSectionURI(sol.getResource("?psuper").getURI());//paragraphSuperString --> Section
 				annotation.setNotation(sol.getLiteral("?notation").getString());

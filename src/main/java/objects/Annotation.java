@@ -3,14 +3,17 @@ package objects;
 public class Annotation {
 
 	private String anchor;
-	private String URI;
+	private String uri;//uri
+	private int id;
 	private String paragraphURI;
 	private String sectionURI;
 	private String notation;
+	private int beginIndex;
+	private int endIndex;
 	
 	public void printAnnotation() {
 		System.out.println("Anchor = " + this.anchor + "\n"
-								+ " URI = " + this.URI + "\n"
+								+ " URI = " + this.uri + "\n"
 									+ "paragraphURI = " + this.paragraphURI + "\n"
 										+ "sectionURI = " + this.sectionURI + "\n"
 												+ "notation = " + this.notation + "\n");
@@ -23,11 +26,11 @@ public class Annotation {
 	public void setAnchor(String anchor) {
 		this.anchor = anchor;
 	}
-	public String getURI() {
-		return URI;
+	public String getUri() {
+		return uri;
 	}
-	public void setURI(String uRI) {
-		URI = uRI;
+	public void setUri(String uri) {
+		this.uri = uri;
 	}
 	public String getParagraphURI() {
 		return paragraphURI;
@@ -50,5 +53,35 @@ public class Annotation {
 
 	public void setNotation(String notation) {
 		this.notation = notation;
+	}
+
+
+	public int getBeginIndex() {
+		return beginIndex;
+	}
+
+
+	public void setBeginIndex(int beginIndex) {
+		this.beginIndex = beginIndex;
+	}
+
+
+	public int getEndIndex() {
+		return endIndex;
+	}
+
+
+	public void setEndIndex(int endIndex) {
+		this.endIndex = endIndex;
+	}
+
+
+	public int getId() {
+		return id;
+	}
+
+
+	public void setId(int id) {
+		this.id = id;
 	}
 }
