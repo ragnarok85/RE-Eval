@@ -8,7 +8,7 @@ import org.apache.log4j.Logger;
 
 import objects.Annotation;
 import objects.DBpediaRelation;
-import objects.Report;
+import reports.Report;
 import opennlp.tools.util.InvalidFormatException;
 import sparql.SparqlQueries;
 

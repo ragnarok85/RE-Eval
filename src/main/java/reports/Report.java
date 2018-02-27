@@ -1,4 +1,4 @@
-package objects;
+package reports;
 
 public class Report {
 	private String anchor;

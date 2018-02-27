@@ -19,3 +19,90 @@
 2018-02-26 14:49:37 INFO  RelationExtractionViaSparql:64 - select ?s ?o (<http://dbpedia.org/ontology/employer> as ?p) where {  ?s a <http://dbpedia.org/ontology/Person>.  ?s <http://dbpedia.org/ontology/employer> ?o.  ?o a <http://dbpedia.org/ontology/Organisation>. } 
 2018-02-26 14:49:37 INFO  RelationExtractionViaSparql:70 - Processing file: Employer
 2018-02-26 14:49:41 INFO  RelationExtractionViaSparql:79 - Beging Abstract
+2018-02-26 17:10:42 INFO  RelationExtractionViaSparql:64 - select ?s ?o (<http://dbpedia.org/ontology/employer> as ?p) where {  ?s a <http://dbpedia.org/ontology/Person>.  ?s <http://dbpedia.org/ontology/employer> ?o.  ?o a <http://dbpedia.org/ontology/Organisation>. } 
+2018-02-26 17:10:42 INFO  RelationExtractionViaSparql:70 - Processing file: Employer
+2018-02-26 17:10:50 INFO  RelationExtractionViaSparql:79 - Beging Abstract
+2018-02-26 17:13:54 INFO  RelationExtractionViaSparql:64 - select ?s ?o (<http://dbpedia.org/ontology/employer> as ?p) where {  ?s a <http://dbpedia.org/ontology/Person>.  ?s <http://dbpedia.org/ontology/employer> ?o.  ?o a <http://dbpedia.org/ontology/Organisation>. } 
+2018-02-26 17:13:54 INFO  RelationExtractionViaSparql:70 - Processing file: Employer
+2018-02-26 17:13:58 INFO  RelationExtractionViaSparql:79 - Beging Abstract
+2018-02-26 17:14:52 INFO  RelationExtractionViaSparql:64 - select ?s ?o (<http://dbpedia.org/ontology/employer> as ?p) where {  ?s a <http://dbpedia.org/ontology/Person>.  ?s <http://dbpedia.org/ontology/employer> ?o.  ?o a <http://dbpedia.org/ontology/Organisation>. } 
+2018-02-26 17:14:52 INFO  RelationExtractionViaSparql:70 - Processing file: Employer
+2018-02-26 17:14:58 INFO  RelationExtractionViaSparql:79 - Beging Abstract
+2018-02-26 17:18:55 INFO  RelationExtractionViaSparql:64 - select ?s ?o (<http://dbpedia.org/ontology/employer> as ?p) where {  ?s a <http://dbpedia.org/ontology/Person>.  ?s <http://dbpedia.org/ontology/employer> ?o.  ?o a <http://dbpedia.org/ontology/Organisation>. } 
+2018-02-26 17:18:55 INFO  RelationExtractionViaSparql:70 - Processing file: Employer
+2018-02-26 17:19:00 INFO  RelationExtractionViaSparql:79 - Beging Abstract
+2018-02-26 17:22:05 INFO  RelationExtractionViaSparql:64 - select ?s ?o (<http://dbpedia.org/ontology/employer> as ?p) where {  ?s a <http://dbpedia.org/ontology/Person>.  ?s <http://dbpedia.org/ontology/employer> ?o.  ?o a <http://dbpedia.org/ontology/Organisation>. } 
+2018-02-26 17:22:05 INFO  RelationExtractionViaSparql:70 - Processing file: Employer
+2018-02-26 17:22:11 INFO  RelationExtractionViaSparql:79 - Beging Abstract
+2018-02-26 17:24:40 INFO  RelationExtractionViaSparql:64 - select ?s ?o (<http://dbpedia.org/ontology/employer> as ?p) where {  ?s a <http://dbpedia.org/ontology/Person>.  ?s <http://dbpedia.org/ontology/employer> ?o.  ?o a <http://dbpedia.org/ontology/Organisation>. } 
+2018-02-26 17:24:40 INFO  RelationExtractionViaSparql:70 - Processing file: Employer
+2018-02-26 17:24:43 INFO  RelationExtractionViaSparql:79 - Beging Abstract
+2018-02-26 17:54:22 INFO  RelationExtractionViaSparql:64 - select ?s ?o (<http://dbpedia.org/ontology/employer> as ?p) where {  ?s a <http://dbpedia.org/ontology/Person>.  ?s <http://dbpedia.org/ontology/employer> ?o.  ?o a <http://dbpedia.org/ontology/Organisation>. } 
+2018-02-26 17:54:22 INFO  RelationExtractionViaSparql:70 - Processing file: Employer
+2018-02-26 17:54:26 INFO  RelationExtractionViaSparql:79 - Beging Abstract
+2018-02-26 17:57:46 INFO  RelationExtractionViaSparql:104 - relations not found in abstract = 0
+2018-02-26 17:57:46 INFO  RelationExtractionViaSparql:111 - End Abstract
+2018-02-26 17:57:46 INFO  RelationExtractionViaSparql:115 - Relation = Employer #Results = 4908
+2018-02-26 18:03:09 INFO  RelationExtractionViaSparql:64 - select ?s ?o (<http://dbpedia.org/ontology/employer> as ?p) where {  ?s a <http://dbpedia.org/ontology/Person>.  ?s <http://dbpedia.org/ontology/employer> ?o.  ?o a <http://dbpedia.org/ontology/Organisation>. } 
+2018-02-26 18:03:09 INFO  RelationExtractionViaSparql:70 - Processing file: Employer
+2018-02-26 18:03:14 INFO  RelationExtractionViaSparql:79 - Beging Abstract
+2018-02-26 18:04:07 INFO  RelationExtractionViaSparql:104 - relations not found in abstract = 0
+2018-02-26 18:04:07 INFO  RelationExtractionViaSparql:111 - End Abstract
+2018-02-26 18:04:07 INFO  RelationExtractionViaSparql:115 - Relation = Employer #Results = 4908
+2018-02-26 18:05:40 INFO  RelationExtractionViaSparql:64 - select ?s ?o (<http://dbpedia.org/ontology/employer> as ?p) where {  ?s a <http://dbpedia.org/ontology/Person>.  ?s <http://dbpedia.org/ontology/employer> ?o.  ?o a <http://dbpedia.org/ontology/Organisation>. } 
+2018-02-26 18:05:40 INFO  RelationExtractionViaSparql:70 - Processing file: Employer
+2018-02-26 18:05:43 INFO  RelationExtractionViaSparql:79 - Beging Abstract
+2018-02-26 18:06:35 INFO  RelationExtractionViaSparql:104 - relations not found in abstract = 0
+2018-02-26 18:06:35 INFO  RelationExtractionViaSparql:111 - End Abstract
+2018-02-26 18:06:35 INFO  RelationExtractionViaSparql:115 - Relation = Employer #Results = 4908
+2018-02-26 18:19:06 INFO  RelationExtractionViaSparql:64 - select ?s ?o (<http://dbpedia.org/ontology/employer> as ?p) where {  ?s a <http://dbpedia.org/ontology/Person>.  ?s <http://dbpedia.org/ontology/employer> ?o.  ?o a <http://dbpedia.org/ontology/Organisation>. } 
+2018-02-26 18:19:06 INFO  RelationExtractionViaSparql:70 - Processing file: Employer
+2018-02-26 18:19:13 INFO  RelationExtractionViaSparql:79 - Beging Abstract
+2018-02-26 18:20:07 INFO  RelationExtractionViaSparql:104 - relations not found in abstract = 0
+2018-02-26 18:20:07 INFO  RelationExtractionViaSparql:110 - TOTAL TIME = 1 min, 0 sec
+2018-02-26 18:20:07 INFO  RelationExtractionViaSparql:111 - End Abstract
+2018-02-26 18:20:07 INFO  RelationExtractionViaSparql:115 - Relation = Employer #Results = 4908
+2018-02-26 18:21:53 INFO  RelationExtractionViaSparql:64 - select ?s ?o (<http://dbpedia.org/ontology/employer> as ?p) where {  ?s a <http://dbpedia.org/ontology/Person>.  ?s <http://dbpedia.org/ontology/employer> ?o.  ?o a <http://dbpedia.org/ontology/Organisation>. } 
+2018-02-26 18:21:53 INFO  RelationExtractionViaSparql:70 - Processing file: Employer
+2018-02-26 18:21:59 INFO  RelationExtractionViaSparql:79 - Beging Abstract
+2018-02-26 18:22:53 INFO  RelationExtractionViaSparql:105 - relations not found in abstract = 0
+2018-02-26 18:22:53 INFO  RelationExtractionViaSparql:111 - TOTAL TIME = 1 min, 0 sec
+2018-02-26 18:22:53 INFO  RelationExtractionViaSparql:112 - End Abstract
+2018-02-26 18:22:53 INFO  RelationExtractionViaSparql:116 - Relation = Employer #Results = 4908
+2018-02-26 18:22:53 INFO  RelationExtractionViaSparql:117 - Relations found in Abstract = 0
+2018-02-26 18:23:56 INFO  RelationExtractionViaSparql:64 - select ?s ?o (<http://dbpedia.org/ontology/employer> as ?p) where {  ?s a <http://dbpedia.org/ontology/Person>.  ?s <http://dbpedia.org/ontology/employer> ?o.  ?o a <http://dbpedia.org/ontology/Organisation>. } 
+2018-02-26 18:23:56 INFO  RelationExtractionViaSparql:70 - Processing file: Employer
+2018-02-26 18:24:00 INFO  RelationExtractionViaSparql:79 - Beging Abstract
+2018-02-26 18:25:04 INFO  RelationExtractionViaSparql:106 - relations not found in abstract = 0
+2018-02-26 18:25:04 INFO  RelationExtractionViaSparql:112 - TOTAL TIME = 1 min, 8 sec
+2018-02-26 18:25:04 INFO  RelationExtractionViaSparql:113 - End Abstract
+2018-02-26 18:25:04 INFO  RelationExtractionViaSparql:117 - Relation = Employer #Results = 4908
+2018-02-26 18:25:04 INFO  RelationExtractionViaSparql:118 - Relations found in Abstract = 3129
+2018-02-26 18:28:56 INFO  RelationExtractionViaSparql:64 - select ?s ?o (<http://dbpedia.org/ontology/employer> as ?p) where {  ?s a <http://dbpedia.org/ontology/Person>.  ?s <http://dbpedia.org/ontology/employer> ?o.  ?o a <http://dbpedia.org/ontology/Organisation>. } 
+2018-02-26 18:28:56 INFO  RelationExtractionViaSparql:71 - Processing file: Employer
+2018-02-26 18:29:01 INFO  RelationExtractionViaSparql:80 - Beging Abstract
+2018-02-26 18:30:01 INFO  RelationExtractionViaSparql:109 - relations not found in abstract = 0
+2018-02-26 18:30:01 INFO  RelationExtractionViaSparql:115 - TOTAL TIME = 1 min, 5 sec
+2018-02-26 18:30:01 INFO  RelationExtractionViaSparql:116 - End Abstract
+2018-02-26 18:30:01 INFO  RelationExtractionViaSparql:120 - Relation = Employer #Results = 4908
+2018-02-26 18:30:01 INFO  RelationExtractionViaSparql:121 - Relations found in Abstract = 3129
+2018-02-26 18:30:01 INFO  RelationExtractionViaSparql:122 - Relations not found in Abstract = 2135
+2018-02-26 18:33:00 INFO  RelationExtractionViaSparql:64 - select ?s ?o (<http://dbpedia.org/ontology/employer> as ?p) where {  ?s a <http://dbpedia.org/ontology/Person>.  ?s <http://dbpedia.org/ontology/employer> ?o.  ?o a <http://dbpedia.org/ontology/Organisation>. } 
+2018-02-26 18:33:00 INFO  RelationExtractionViaSparql:71 - Processing file: Employer
+2018-02-26 18:33:05 INFO  RelationExtractionViaSparql:80 - Beging Abstract
+2018-02-26 18:34:09 INFO  RelationExtractionViaSparql:108 - relations not found in abstract = 0
+2018-02-26 18:34:09 INFO  RelationExtractionViaSparql:114 - TOTAL TIME = 1 min, 9 sec
+2018-02-26 18:34:09 INFO  RelationExtractionViaSparql:115 - End Abstract
+2018-02-26 18:34:09 INFO  RelationExtractionViaSparql:119 - Relation = Employer #Results = 4908
+2018-02-26 18:34:09 INFO  RelationExtractionViaSparql:120 - Relations found in Abstract = 2760
+2018-02-26 18:34:09 INFO  RelationExtractionViaSparql:121 - Relations not found in Abstract = 2135
+2018-02-26 18:37:28 INFO  RelationExtractionViaSparql:64 - select ?s ?o (<http://dbpedia.org/ontology/employer> as ?p) where {  ?s a <http://dbpedia.org/ontology/Person>.  ?s <http://dbpedia.org/ontology/employer> ?o.  ?o a <http://dbpedia.org/ontology/Organisation>. } 
+2018-02-26 18:37:28 INFO  RelationExtractionViaSparql:72 - Processing file: Employer
+2018-02-26 18:37:32 INFO  RelationExtractionViaSparql:81 - Beging Abstract
+2018-02-26 18:38:35 INFO  RelationExtractionViaSparql:110 - relations not found in abstract = 0
+2018-02-26 18:38:35 INFO  RelationExtractionViaSparql:116 - TOTAL TIME = 1 min, 6 sec
+2018-02-26 18:38:35 INFO  RelationExtractionViaSparql:117 - End Abstract
+2018-02-26 18:38:35 INFO  RelationExtractionViaSparql:121 - Relation = Employer #Results = 4908
+2018-02-26 18:38:35 INFO  RelationExtractionViaSparql:122 - Relations found in Abstract = 2760
+2018-02-26 18:38:35 INFO  RelationExtractionViaSparql:123 - Relations not found in Abstract = 2135
+2018-02-26 18:38:35 INFO  RelationExtractionViaSparql:124 - File does not exist = 13

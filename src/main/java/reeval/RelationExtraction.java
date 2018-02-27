@@ -26,7 +26,7 @@ import objects.Article;
 import objects.DBpediaRelation;
 import objects.Paragraph;
 import objects.REStats;
-import objects.Report;
+import reports.Report;
 import objects.Section;
 import opennlp.tools.util.InvalidFormatException;
 

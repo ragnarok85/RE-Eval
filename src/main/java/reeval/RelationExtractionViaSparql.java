@@ -6,7 +6,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -22,9 +21,11 @@ import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.util.FileManager;
 import org.apache.log4j.Logger;
 
+import objects.AnnotationB;
 import objects.DBpediaRelation;
 import objects.REStats;
-import sparql.Queries;
+import reports.FileReport;
+import reports.GeneralReport;
 import sparql.SparqlQueries;
 
 public class RelationExtractionViaSparql {
@@ -33,7 +34,7 @@ public class RelationExtractionViaSparql {
 
 	SparqlQueries sq = new SparqlQueries();
 	
-	public static void main(String[] args) throws UnsupportedEncodingException, NoSuchAlgorithmException{
+	public static void main(String[] args) throws NoSuchAlgorithmException, IOException{
 		
 		File sparqlPath = new File(args[0]);
 		File[] sparqlFiles = sparqlPath.listFiles();
@@ -53,6 +54,8 @@ public class RelationExtractionViaSparql {
 		
 		RelationExtractionViaSparql re = new RelationExtractionViaSparql();
 		
+		GeneralReport gr = new GeneralReport();
+		
 		for(File file : sparqlFiles) {
 			if(!file.getName().contains("Employer"))
 				continue;
@@ -65,9 +68,14 @@ public class RelationExtractionViaSparql {
 			mapSparqlQueries.put(file.getName().replace(".rq", ""),query);
 			
 		}
-		
+		int annotationCounter = 0;
+		int notInAbstractCounter = 0;
+		int nullCounter = 0;
 		for(Map.Entry<String, String> entry : mapSparqlQueries.entrySet()) {
 			logger.info("Processing file: " + entry.getKey());
+			gr.setTargetRelation(entry.getKey());
+			gr.setSparqlQuery(entry.getValue());
+			
 			Long initialTime = System.currentTimeMillis();
 			Long endTime = 0L;
 			String timeElapsed = "";
@@ -77,7 +85,10 @@ public class RelationExtractionViaSparql {
 //			notInSectionList.addAll(re.lookRelationsInSection(listRelations, nifPath, 
 //					sentenceModel, tokenizerModel, entry.getKey(), outputSections));
 			logger.info("Beging Abstract");
+			List<FileReport> listFileReports = new ArrayList<FileReport>();
 			for(DBpediaRelation rel : listRelations){
+				FileReport fr = new FileReport();
+				
 				String[] sbjSplit = rel.getSbjURI().split("/");
 				String sbj = sbjSplit[sbjSplit.length-1];
 				String sbjAnchor = sbj.replaceAll("_", " ");
@@ -87,18 +98,28 @@ public class RelationExtractionViaSparql {
 				objAnchor = objAnchor.replaceAll("_", " ");
 				
 				File filePath = re.lookNIFFile(sbj, nifPath);
+				fr.setFilePath(filePath.getCanonicalPath());
+				fr.setSubjectURI(rel.getSbjURI());
+				fr.setSubjectAnchor(rel.getSbjLabel());
+				fr.setObjectURI(rel.getObjURI());
+				fr.setObjectAnchor(rel.getObjLabel());
 				
 				BZip2CompressorInputStream inputStream = re.createBz2Reader(filePath);
 				if (inputStream == null) {
+					nullCounter++;
+					fr.setReal(false);
+					listFileReports.add(fr);
 					continue;
 				}
 				
 				Model model = re.createJenaModel(inputStream);
 				
-				List<String> listAnnotations = re.sq.queryAnnotations(model, objAnchor);
+				List<AnnotationB> listAnnotations = re.sq.queryAnnotations(model, objAnchor);
 				
-				for(String ann : listAnnotations){
-					System.out.println(ann);
+				notInAbstractCounter += (listAnnotations.size() == 0) ? 1 : 0 ;
+				annotationCounter += (listAnnotations.size() > 0) ? 1: 0;
+				for(AnnotationB ann : listAnnotations){
+					System.out.println(ann.toString());
 				}
 			}
 			logger.info("relations not found in abstract = " + notInAbstractList.size());
@@ -107,15 +128,18 @@ public class RelationExtractionViaSparql {
 			timeElapsed = String.format("TOTAL TIME = %d min, %d sec", TimeUnit.MILLISECONDS.toMinutes(endTime),
 	    			TimeUnit.MILLISECONDS.toSeconds(endTime) - 
 	    		    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(endTime)));
-
+			logger.info(timeElapsed);
 			logger.info("End Abstract");
 		}
 		
 		for(REStats stat : listStats) {
+			
 			logger.info("Relation = " + stat.getPredicate() + " #Results = " + stat.getNumberResults());
+			logger.info("Relations found in Abstract = " + annotationCounter);
+			logger.info("Relations not found in Abstract = " + notInAbstractCounter);
+			logger.info("File does not exist = " + nullCounter);
 		}
-		
-	}
+}
 	
 	public BZip2CompressorInputStream createBz2Reader(File source) {
 		BZip2CompressorInputStream pageStruct = null;

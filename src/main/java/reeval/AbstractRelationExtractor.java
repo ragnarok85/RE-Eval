@@ -4,6 +4,7 @@ import static reeval.RelationExtraction.counterContains;
 import static reeval.RelationExtraction.counterEquals;
 import static reeval.RelationExtraction.listReport;
 import static reeval.RelationExtraction.notInList;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,8 +19,6 @@ import org.apache.log4j.Logger;
 
 import objects.Annotation;
 import objects.DBpediaRelation;
-import opennlp.tools.sentdetect.SentenceModel;
-import opennlp.tools.tokenize.TokenizerModel;
 import sparql.SparqlQueries;
 import text.TextSearcher;
 

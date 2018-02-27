@@ -32,15 +32,17 @@ public class SparqlQueries {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public List<String> queryAnnotations(Model model, String obj){
-		List<String> listAnnotations = new ArrayList<String>();
+	public List<AnnotationB> queryAnnotations(Model model, String obj){
+		List<AnnotationB> listAnnotations = new ArrayList<AnnotationB>();
+		obj = obj.replace("+", ""); //replacing the pattern symbol +
 		String queryString = Queries.ABSTRACTANNOTATIONS.query().replace("**ANNOTATION**", obj);
-		System.out.println(queryString);
+//		System.out.println(queryString);
 		Query query = QueryFactory.create(queryString);
 		try(QueryExecution qexec = QueryExecutionFactory.create(query, model)){
 			ResultSet rs = qexec.execSelect();
 			while(rs.hasNext()){
 				QuerySolution qs = rs.next();
+				AnnotationB ann = new AnnotationB();
 				//?bi ?ei ?anchor ?annotation ?section ?paragraph
 				int bi = qs.getLiteral("?bi").getInt();
 				int ei = qs.getLiteral("?ei").getInt();
@@ -48,7 +50,16 @@ public class SparqlQueries {
 				String annotation = qs.getResource("?annotation").getURI();
 				String section = qs.getResource("?section").getURI();
 				String paragraph = qs.getResource("?paragraph").getURI();
-				listAnnotations.add( bi + "\t" + ei + "\t" + anchor + "\t" + annotation + "\t" + section + "\t" + paragraph);
+				
+				ann.setAnchor(anchor);
+				ann.setAnnotation(annotation);
+				ann.setBeginIndex(bi);
+				ann.setEndIndex(ei);
+				ann.setParagraphURI(paragraph);
+				ann.setSectionURI(section);
+				
+				listAnnotations.add(ann);
+				//listAnnotations.add( bi + "\t" + ei + "\t" + anchor + "\t" + annotation + "\t" + section + "\t" + paragraph);
 			}
 		}
 		return listAnnotations;
