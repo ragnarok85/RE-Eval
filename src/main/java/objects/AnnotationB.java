@@ -13,6 +13,7 @@ public class AnnotationB {
 	private DBpediaRelation rel;
 	private String notation;
 	private String foundIn; //opts = Abstract/Section
+	private String kindOfMatch; //opts = exact/partial
 	
 	public AnnotationB(){
 		this.paragraph = new Paragraph();
@@ -71,8 +72,8 @@ public class AnnotationB {
 	public String toString() {
 		return rel.getId() + "\t" + rel.getSbjLabel()
 				+ "\t" + rel.getTargetRelation() + "\t" + rel.getObjLabel()
-				+ "\t" + foundIn + "\t" + notation + "\t" + anchor + "\t" 
-				+ textSegment + "\t" + annotation;
+				+ "\t" + foundIn + "\t" + notation + "\t" + anchor + "\t" + kindOfMatch 
+				+ "\t" + textSegment + "\t" + annotation;
 	}
 
 	public String getTextSegment() {
@@ -113,6 +114,14 @@ public class AnnotationB {
 
 	public void setNotation(String notation) {
 		this.notation = notation;
+	}
+
+	public String getKindOfMatch() {
+		return kindOfMatch;
+	}
+
+	public void setKindOfMatch(String kindOfMatch) {
+		this.kindOfMatch = kindOfMatch;
 	}
 
 }

@@ -1,5 +1,8 @@
 package reports;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class GeneralReport {
 	
 	private String targetRelation;
@@ -9,13 +12,15 @@ public class GeneralReport {
 	private int foundInSection;
 	private int filesWithAnnotation;
 	private int filesWithoutAnnotation;
-	private int filesNotFounded;
-	
+	private List<String> filesNotFounded;
 	private int numberOffilesNotFound;
+	private String processingTime;
 
 	public GeneralReport() {
+		this.filesNotFounded = new ArrayList<String>();
 	}
-
+	
+	
 	public String getTargetRelation() {
 		return targetRelation;
 	}
@@ -72,11 +77,11 @@ public class GeneralReport {
 		this.filesWithoutAnnotation = filesWithoutAnnotation;
 	}
 
-	public int getFilesNotFounded() {
+	public List<String> getFilesNotFounded() {
 		return filesNotFounded;
 	}
 
-	public void setFilesNotFounded(int filesNotFounded) {
+	public void setFilesNotFounded(List<String> filesNotFounded) {
 		this.filesNotFounded = filesNotFounded;
 	}
 
@@ -86,6 +91,29 @@ public class GeneralReport {
 
 	public void setNumberOffilesNotFound(int numberOffilesNotFound) {
 		this.numberOffilesNotFound = numberOffilesNotFound;
+	}
+
+	@Override
+	public String toString() {
+		return "GeneralReport \n ProcessingTime\t" + processingTime + "\ntargetRelation\t" + targetRelation
+				+ "\nsparqlQuery\t" + sparqlQuery 
+				+ "\nDBpediaResults\t" + DBpediaResults 
+				+ "\n\tfilesWithAnnotations\t" + filesWithAnnotation
+				+ "\n\t\tAnnotationsfoundInAbstract\t" + foundInAbstract
+				+ "\n\t\tAnnotationsfoundInSection\t" + foundInSection
+				+ "\n\tfilesWithoutAnnotations\t" + filesWithoutAnnotation
+				+ "\nnumberOffilesNotFound\t" + numberOffilesNotFound
+				+ "\n\tfilesNotFounded\t" + filesNotFounded;
+	}
+
+
+	public String getProcessingTime() {
+		return processingTime;
+	}
+
+
+	public void setProcessingTime(String processingTime) {
+		this.processingTime = processingTime;
 	}
 
 	

@@ -286,3 +286,143 @@
 2018-02-27 18:37:37 INFO  RelationExtractionViaSparql:174 - File does not exist = 13
 2018-02-27 18:37:37 INFO  RelationExtractionViaSparql:175 - Annotations founded in Abstract = 3105
 2018-02-27 18:37:37 INFO  RelationExtractionViaSparql:176 - Annotations founded in Section = 4103
+2018-02-28 10:01:15 INFO  RelationExtractionViaSparql:63 - select ?s ?o (<http://dbpedia.org/ontology/employer> as ?p) where {  ?s a <http://dbpedia.org/ontology/Person>.  ?s <http://dbpedia.org/ontology/employer> ?o.  ?o a <http://dbpedia.org/ontology/Organisation>. } 
+2018-02-28 10:01:15 INFO  RelationExtractionViaSparql:74 - Processing file: Employer
+2018-02-28 10:01:23 INFO  RelationExtractionViaSparql:84 - Beging Process
+2018-02-28 10:04:35 INFO  RelationExtractionViaSparql:141 - relations not found in abstract = 0
+2018-02-28 10:04:35 INFO  RelationExtractionViaSparql:148 - TOTAL TIME = 3 min, 19 sec
+2018-02-28 10:04:35 INFO  RelationExtractionViaSparql:149 - End Abstract
+2018-02-28 10:04:35 INFO  RelationExtractionViaSparql:157 - Relation = Employer #Results = 4908
+2018-02-28 10:04:35 INFO  RelationExtractionViaSparql:158 - Files processed = 3867
+2018-02-28 10:04:35 INFO  RelationExtractionViaSparql:159 - Files with no annotations = 1028
+2018-02-28 10:04:35 INFO  RelationExtractionViaSparql:160 - File does not exist = 13
+2018-02-28 10:04:35 INFO  RelationExtractionViaSparql:161 - Annotations founded in Abstract = 3105
+2018-02-28 10:04:35 INFO  RelationExtractionViaSparql:162 - Annotations founded in Section = 4103
+2018-02-28 10:14:03 INFO  RelationExtractionViaSparql:62 - select ?s ?o (<http://dbpedia.org/ontology/employer> as ?p) where {  ?s a <http://dbpedia.org/ontology/Person>.  ?s <http://dbpedia.org/ontology/employer> ?o.  ?o a <http://dbpedia.org/ontology/Organisation>. } 
+2018-02-28 10:14:03 INFO  RelationExtractionViaSparql:74 - Processing file: Employer
+2018-02-28 10:14:10 INFO  RelationExtractionViaSparql:84 - Beging Process
+2018-02-28 10:16:05 INFO  RelationExtractionViaSparql:153 - TOTAL TIME = 2 min, 2 sec
+2018-02-28 10:16:05 INFO  RelationExtractionViaSparql:154 - End Abstract
+2018-02-28 10:16:05 INFO  RelationExtractionViaSparql:162 - Relation = Employer #Results = 4908
+2018-02-28 10:16:05 INFO  RelationExtractionViaSparql:163 - Files processed = 3867
+2018-02-28 10:16:05 INFO  RelationExtractionViaSparql:164 - Files with no annotations = 1028
+2018-02-28 10:16:05 INFO  RelationExtractionViaSparql:165 - File does not exist = 13
+2018-02-28 10:16:05 INFO  RelationExtractionViaSparql:166 - Annotations founded in Abstract = 3105
+2018-02-28 10:16:05 INFO  RelationExtractionViaSparql:167 - Annotations founded in Section = 4103
+2018-02-28 10:22:46 INFO  RelationExtractionViaSparql:62 - select ?s ?o (<http://dbpedia.org/ontology/employer> as ?p) where {  ?s a <http://dbpedia.org/ontology/Person>.  ?s <http://dbpedia.org/ontology/employer> ?o.  ?o a <http://dbpedia.org/ontology/Organisation>. } 
+2018-02-28 10:22:46 INFO  RelationExtractionViaSparql:74 - Processing file: Employer
+2018-02-28 10:22:51 INFO  RelationExtractionViaSparql:84 - Beging Process
+2018-02-28 10:24:35 INFO  RelationExtractionViaSparql:154 - TOTAL TIME = 1 min, 49 sec
+2018-02-28 10:24:35 INFO  RelationExtractionViaSparql:155 - End Abstract
+2018-02-28 10:24:35 INFO  RelationExtractionViaSparql:163 - Relation = Employer #Results = 4908
+2018-02-28 10:24:35 INFO  RelationExtractionViaSparql:164 - Files processed = 3867
+2018-02-28 10:24:35 INFO  RelationExtractionViaSparql:165 - Files with no annotations = 1028
+2018-02-28 10:24:35 INFO  RelationExtractionViaSparql:166 - File does not exist = 13
+2018-02-28 10:24:35 INFO  RelationExtractionViaSparql:167 - Annotations founded in Abstract = 3105
+2018-02-28 10:24:35 INFO  RelationExtractionViaSparql:168 - Annotations founded in Section = 4103
+2018-02-28 10:26:08 INFO  RelationExtractionViaSparql:62 - select ?s ?o (<http://dbpedia.org/ontology/award> as ?p) where { ?s a <http://dbpedia.org/ontology/Person> . ?s <http://dbpedia.org/ontology/award> ?o . ?o a <http://dbpedia.org/ontology/Award>. } 
+2018-02-28 10:26:08 INFO  RelationExtractionViaSparql:62 - select ?s ?o (<http://dbpedia.org/ontology/child> as ?p) where { ?s a <http://dbpedia.org/ontology/Person> . ?s <http://dbpedia.org/ontology/child> ?o . ?o a <http://dbpedia.org/ontology/Person> . } 
+2018-02-28 10:26:08 INFO  RelationExtractionViaSparql:62 - select ?s ?o (<http://dbpedia.org/ontology/birthPlace> as ?p) where { ?s a <http://dbpedia.org/ontology/Person> . ?s <http://dbpedia.org/ontology/birthPlace> ?o . ?o a <http://dbpedia.org/ontology/City> . } 
+2018-02-28 10:26:08 INFO  RelationExtractionViaSparql:62 - select ?s ?o (<http://dbpedia.org/ontology/residence> as ?p) where { ?s a <http://dbpedia.org/ontology/Person> . ?s <http://dbpedia.org/ontology/residence> ?o . ?o a <http://dbpedia.org/ontology/City> . } 
+2018-02-28 10:26:08 INFO  RelationExtractionViaSparql:62 - select ?s ?o (<http://dbpedia.org/ontology/employer> as ?p) where {  ?s a <http://dbpedia.org/ontology/Person>.  ?s <http://dbpedia.org/ontology/employer> ?o.  ?o a <http://dbpedia.org/ontology/Organisation>. } 
+2018-02-28 10:26:08 INFO  RelationExtractionViaSparql:62 - select ?s ?o (<http://dbpedia.org/ontology/nationality> as ?p) where { ?s a <http://dbpedia.org/ontology/Person> . ?s <http://dbpedia.org/ontology/nationality> ?o . ?o a <http://dbpedia.org/ontology/Country> . } 
+2018-02-28 10:26:08 INFO  RelationExtractionViaSparql:62 - select ?s ?o (<http://dbpedia.org/ontology/occupation> as ?p) where {   ?s a <http://dbpedia.org/ontology/Person> . ?s <http://dbpedia.org/ontology/occupation> ?ot . ?ot a <http://dbpedia.org/ontology/PersonFunction> . ?s <http://purl.org/linguistics/gold/hypernym> ?o .} 
+2018-02-28 10:26:08 INFO  RelationExtractionViaSparql:62 - select ?s ?o (<http://dbpedia.org/ontology/parent> as ?p) where { ?s a <http://dbpedia.org/ontology/Person> . ?s <http://dbpedia.org/ontology/parent> ?o . ?o a <http://dbpedia.org/ontology/Person> . } 
+2018-02-28 10:26:08 INFO  RelationExtractionViaSparql:62 - select ?s ?o (<http://dbpedia.org/ontology/party> as ?p) where { ?s a <http://dbpedia.org/ontology/Person> . ?s <http://dbpedia.org/ontology/party> ?o . ?o a <http://dbpedia.org/ontology/PoliticalParty> . } 
+2018-02-28 10:26:08 INFO  RelationExtractionViaSparql:62 - select ?s ?o (<http://dbpedia.org/ontology/almaMater> as ?p) where { ?s a <http://dbpedia.org/ontology/Person> . ?s <http://dbpedia.org/ontology/almaMater> ?o . ?o a <http://dbpedia.org/ontology/EducationalInstitution>. } 
+2018-02-28 10:26:08 INFO  RelationExtractionViaSparql:62 - select ?s ?o (<http://dbpedia.org/ontology/child> as ?p) where { ?s a <http://dbpedia.org/ontology/Person> . ?s <http://dbpedia.org/ontology/child> ?o . ?o a <http://dbpedia.org/ontology/Person> . } 
+2018-02-28 10:26:08 INFO  RelationExtractionViaSparql:62 - select ?s ?o (<http://dbpedia.org/ontology/spouse> as ?p) where { ?s a <http://dbpedia.org/ontology/Person> . ?s <http://dbpedia.org/ontology/spouse> ?o . ?o a <http://dbpedia.org/ontology/Person> . } 
+2018-02-28 10:26:08 INFO  RelationExtractionViaSparql:74 - Processing file: Occupation
+2018-02-28 10:26:16 INFO  RelationExtractionViaSparql:84 - Beging Process
+2018-02-28 10:33:16 INFO  RelationExtractionViaSparql:154 - TOTAL TIME = 7 min, 7 sec
+2018-02-28 10:33:16 INFO  RelationExtractionViaSparql:155 - End Abstract
+2018-02-28 10:33:16 INFO  RelationExtractionViaSparql:74 - Processing file: Awards
+2018-02-28 10:33:23 INFO  RelationExtractionViaSparql:84 - Beging Process
+2018-02-28 13:54:26 INFO  RelationExtractionViaSparql:62 - select ?s ?o (<http://dbpedia.org/ontology/award> as ?p) where { ?s a <http://dbpedia.org/ontology/Person> . ?s <http://dbpedia.org/ontology/award> ?o . ?o a <http://dbpedia.org/ontology/Award>. } 
+2018-02-28 13:54:26 INFO  RelationExtractionViaSparql:74 - Processing file: Awards
+2018-02-28 13:54:32 INFO  RelationExtractionViaSparql:84 - Beging Process
+2018-02-28 14:00:11 INFO  RelationExtractionViaSparql:154 - TOTAL TIME = 5 min, 45 sec
+2018-02-28 14:00:11 INFO  RelationExtractionViaSparql:155 - End Abstract
+2018-02-28 14:00:11 INFO  RelationExtractionViaSparql:163 - Relation = Awards #Results = 10000
+2018-02-28 14:00:11 INFO  RelationExtractionViaSparql:164 - Files processed = 5331
+2018-02-28 14:00:11 INFO  RelationExtractionViaSparql:165 - Files with no annotations = 4651
+2018-02-28 14:00:11 INFO  RelationExtractionViaSparql:166 - File does not exist = 18
+2018-02-28 14:00:11 INFO  RelationExtractionViaSparql:167 - Annotations founded in Abstract = 1736
+2018-02-28 14:00:11 INFO  RelationExtractionViaSparql:168 - Annotations founded in Section = 5225
+2018-02-28 14:16:23 INFO  RelationExtractionViaSparql:69 - select ?s ?o (<http://dbpedia.org/ontology/award> as ?p) where { ?s a <http://dbpedia.org/ontology/Person> . ?s <http://dbpedia.org/ontology/award> ?o . ?o a <http://dbpedia.org/ontology/Award>. } 
+2018-02-28 14:16:23 INFO  RelationExtractionViaSparql:81 - Processing file: Awards
+2018-02-28 14:16:33 INFO  RelationExtractionViaSparql:91 - Beging Process
+2018-02-28 14:20:24 INFO  RelationExtractionViaSparql:161 - TOTAL TIME = 4 min, 1 sec
+2018-02-28 14:20:24 INFO  RelationExtractionViaSparql:162 - End Abstract
+2018-02-28 14:20:24 INFO  RelationExtractionViaSparql:170 - Relation = Awards #Results = 10000
+2018-02-28 14:20:24 INFO  RelationExtractionViaSparql:171 - Files processed = 5331
+2018-02-28 14:20:24 INFO  RelationExtractionViaSparql:172 - Files with no annotations = 4651
+2018-02-28 14:20:24 INFO  RelationExtractionViaSparql:173 - File does not exist = 18
+2018-02-28 14:20:24 INFO  RelationExtractionViaSparql:174 - Annotations founded in Abstract = 1736
+2018-02-28 14:20:24 INFO  RelationExtractionViaSparql:175 - Annotations founded in Section = 5225
+2018-02-28 14:27:58 INFO  RelationExtractionViaSparql:69 - select ?s ?o (<http://dbpedia.org/ontology/award> as ?p) where { ?s a <http://dbpedia.org/ontology/Person> . ?s <http://dbpedia.org/ontology/award> ?o . ?o a <http://dbpedia.org/ontology/Award>. } 
+2018-02-28 14:27:58 INFO  RelationExtractionViaSparql:81 - Processing file: Awards
+2018-02-28 14:28:03 INFO  RelationExtractionViaSparql:91 - Beging Process
+2018-02-28 14:31:05 INFO  RelationExtractionViaSparql:69 - select ?s ?o (<http://dbpedia.org/ontology/award> as ?p) where { ?s a <http://dbpedia.org/ontology/Person> . ?s <http://dbpedia.org/ontology/award> ?o . ?o a <http://dbpedia.org/ontology/Award>. } 
+2018-02-28 14:31:05 INFO  RelationExtractionViaSparql:81 - Processing file: Awards
+2018-02-28 14:31:09 INFO  RelationExtractionViaSparql:91 - Beging Process
+2018-02-28 14:33:11 INFO  RelationExtractionViaSparql:161 - TOTAL TIME = 5 min, 12 sec
+2018-02-28 14:33:11 INFO  RelationExtractionViaSparql:162 - End Abstract
+2018-02-28 14:33:11 INFO  RelationExtractionViaSparql:170 - Relation = Awards #Results = 10000
+2018-02-28 14:33:11 INFO  RelationExtractionViaSparql:171 - Files processed = 5331
+2018-02-28 14:33:11 INFO  RelationExtractionViaSparql:172 - Files with no annotations = 4651
+2018-02-28 14:33:11 INFO  RelationExtractionViaSparql:173 - File does not exist = 18
+2018-02-28 14:33:11 INFO  RelationExtractionViaSparql:174 - Annotations founded in Abstract = 1736
+2018-02-28 14:33:11 INFO  RelationExtractionViaSparql:175 - Annotations founded in Section = 5225
+2018-02-28 14:35:32 INFO  RelationExtractionViaSparql:161 - TOTAL TIME = 4 min, 26 sec
+2018-02-28 14:35:32 INFO  RelationExtractionViaSparql:162 - End Abstract
+2018-02-28 14:35:32 INFO  RelationExtractionViaSparql:170 - Relation = Awards #Results = 10000
+2018-02-28 14:35:32 INFO  RelationExtractionViaSparql:171 - Files processed = 5331
+2018-02-28 14:35:32 INFO  RelationExtractionViaSparql:172 - Files with no annotations = 4651
+2018-02-28 14:35:32 INFO  RelationExtractionViaSparql:173 - File does not exist = 18
+2018-02-28 14:35:32 INFO  RelationExtractionViaSparql:174 - Annotations founded in Abstract = 1736
+2018-02-28 14:35:32 INFO  RelationExtractionViaSparql:175 - Annotations founded in Section = 5225
+2018-02-28 16:38:02 INFO  RelationExtractionViaSparql:69 - select ?s ?o (<http://dbpedia.org/ontology/award> as ?p) where { ?s a <http://dbpedia.org/ontology/Person> . ?s <http://dbpedia.org/ontology/award> ?o . ?o a <http://dbpedia.org/ontology/Award>. } 
+2018-02-28 16:38:02 INFO  RelationExtractionViaSparql:69 - select ?s ?o (<http://dbpedia.org/ontology/child> as ?p) where { ?s a <http://dbpedia.org/ontology/Person> . ?s <http://dbpedia.org/ontology/child> ?o . ?o a <http://dbpedia.org/ontology/Person> . } 
+2018-02-28 16:38:02 INFO  RelationExtractionViaSparql:69 - select ?s ?o (<http://dbpedia.org/ontology/birthPlace> as ?p) where { ?s a <http://dbpedia.org/ontology/Person> . ?s <http://dbpedia.org/ontology/birthPlace> ?o . ?o a <http://dbpedia.org/ontology/City> . } 
+2018-02-28 16:38:02 INFO  RelationExtractionViaSparql:69 - select ?s ?o (<http://dbpedia.org/ontology/residence> as ?p) where { ?s a <http://dbpedia.org/ontology/Person> . ?s <http://dbpedia.org/ontology/residence> ?o . ?o a <http://dbpedia.org/ontology/City> . } 
+2018-02-28 16:38:02 INFO  RelationExtractionViaSparql:69 - select ?s ?o (<http://dbpedia.org/ontology/employer> as ?p) where {  ?s a <http://dbpedia.org/ontology/Person>.  ?s <http://dbpedia.org/ontology/employer> ?o.  ?o a <http://dbpedia.org/ontology/Organisation>. } 
+2018-02-28 16:38:02 INFO  RelationExtractionViaSparql:69 - select ?s ?o (<http://dbpedia.org/ontology/nationality> as ?p) where { ?s a <http://dbpedia.org/ontology/Person> . ?s <http://dbpedia.org/ontology/nationality> ?o . ?o a <http://dbpedia.org/ontology/Country> . } 
+2018-02-28 16:38:02 INFO  RelationExtractionViaSparql:69 - select ?s ?o (<http://dbpedia.org/ontology/occupation> as ?p) where {   ?s a <http://dbpedia.org/ontology/Person> . ?s <http://dbpedia.org/ontology/occupation> ?ot . ?ot a <http://dbpedia.org/ontology/PersonFunction> . ?s <http://purl.org/linguistics/gold/hypernym> ?o .} 
+2018-02-28 16:38:02 INFO  RelationExtractionViaSparql:69 - select ?s ?o (<http://dbpedia.org/ontology/parent> as ?p) where { ?s a <http://dbpedia.org/ontology/Person> . ?s <http://dbpedia.org/ontology/parent> ?o . ?o a <http://dbpedia.org/ontology/Person> . } 
+2018-02-28 16:38:02 INFO  RelationExtractionViaSparql:69 - select ?s ?o (<http://dbpedia.org/ontology/party> as ?p) where { ?s a <http://dbpedia.org/ontology/Person> . ?s <http://dbpedia.org/ontology/party> ?o . ?o a <http://dbpedia.org/ontology/PoliticalParty> . } 
+2018-02-28 16:38:02 INFO  RelationExtractionViaSparql:69 - select ?s ?o (<http://dbpedia.org/ontology/almaMater> as ?p) where { ?s a <http://dbpedia.org/ontology/Person> . ?s <http://dbpedia.org/ontology/almaMater> ?o . ?o a <http://dbpedia.org/ontology/EducationalInstitution>. } 
+2018-02-28 16:38:02 INFO  RelationExtractionViaSparql:69 - select ?s ?o (<http://dbpedia.org/ontology/child> as ?p) where { ?s a <http://dbpedia.org/ontology/Person> . ?s <http://dbpedia.org/ontology/child> ?o . ?o a <http://dbpedia.org/ontology/Person> . } 
+2018-02-28 16:38:02 INFO  RelationExtractionViaSparql:69 - select ?s ?o (<http://dbpedia.org/ontology/spouse> as ?p) where { ?s a <http://dbpedia.org/ontology/Person> . ?s <http://dbpedia.org/ontology/spouse> ?o . ?o a <http://dbpedia.org/ontology/Person> . } 
+2018-02-28 16:38:02 INFO  RelationExtractionViaSparql:81 - Processing file: Occupation
+2018-02-28 16:38:12 INFO  RelationExtractionViaSparql:91 - Beging Process
+2018-02-28 16:45:53 INFO  RelationExtractionViaSparql:161 - TOTAL TIME = 7 min, 51 sec
+2018-02-28 16:45:53 INFO  RelationExtractionViaSparql:162 - End Abstract
+2018-02-28 16:45:53 INFO  RelationExtractionViaSparql:81 - Processing file: Awards
+2018-02-28 16:46:03 INFO  RelationExtractionViaSparql:91 - Beging Process
+2018-02-28 16:52:52 INFO  RelationExtractionViaSparql:161 - TOTAL TIME = 6 min, 59 sec
+2018-02-28 16:52:52 INFO  RelationExtractionViaSparql:162 - End Abstract
+2018-02-28 16:52:52 INFO  RelationExtractionViaSparql:81 - Processing file: PartyAfiiliation
+2018-02-28 16:53:00 INFO  RelationExtractionViaSparql:91 - Beging Process
+2018-02-28 17:00:45 INFO  RelationExtractionViaSparql:161 - TOTAL TIME = 7 min, 52 sec
+2018-02-28 17:00:45 INFO  RelationExtractionViaSparql:162 - End Abstract
+2018-02-28 17:00:45 INFO  RelationExtractionViaSparql:81 - Processing file: CityOfBirth
+2018-02-28 17:00:52 INFO  RelationExtractionViaSparql:91 - Beging Process
+2018-02-28 17:07:29 INFO  RelationExtractionViaSparql:161 - TOTAL TIME = 6 min, 43 sec
+2018-02-28 17:07:29 INFO  RelationExtractionViaSparql:162 - End Abstract
+2018-02-28 17:07:29 INFO  RelationExtractionViaSparql:81 - Processing file: Spouse
+2018-02-28 17:07:37 INFO  RelationExtractionViaSparql:91 - Beging Process
+2018-02-28 17:19:26 INFO  RelationExtractionViaSparql:69 - select ?s ?o (<http://dbpedia.org/ontology/spouse> as ?p) where { ?s a <http://dbpedia.org/ontology/Person> . ?s <http://dbpedia.org/ontology/spouse> ?o . ?o a <http://dbpedia.org/ontology/Person> . } 
+2018-02-28 17:19:26 INFO  RelationExtractionViaSparql:81 - Processing file: Spouse
+2018-02-28 17:19:30 INFO  RelationExtractionViaSparql:91 - Beging Process
+2018-02-28 17:30:09 INFO  RelationExtractionViaSparql:69 - select ?s ?o (<http://dbpedia.org/ontology/spouse> as ?p) where { ?s a <http://dbpedia.org/ontology/Person> . ?s <http://dbpedia.org/ontology/spouse> ?o . ?o a <http://dbpedia.org/ontology/Person> . } 
+2018-02-28 17:30:09 INFO  RelationExtractionViaSparql:81 - Processing file: Spouse
+2018-02-28 17:30:13 INFO  RelationExtractionViaSparql:91 - Beging Process
+2018-02-28 17:37:14 INFO  RelationExtractionViaSparql:161 - TOTAL TIME = 7 min, 4 sec
+2018-02-28 17:37:14 INFO  RelationExtractionViaSparql:162 - End Abstract
+2018-02-28 17:37:14 INFO  RelationExtractionViaSparql:170 - Relation = Spouse #Results = 10000
+2018-02-28 17:37:14 INFO  RelationExtractionViaSparql:171 - Files processed = 7073
+2018-02-28 17:37:14 INFO  RelationExtractionViaSparql:172 - Files with no annotations = 2908
+2018-02-28 17:37:14 INFO  RelationExtractionViaSparql:173 - File does not exist = 19
+2018-02-28 17:37:14 INFO  RelationExtractionViaSparql:174 - Annotations founded in Abstract = 2450
+2018-02-28 17:37:14 INFO  RelationExtractionViaSparql:175 - Annotations founded in Section = 7431

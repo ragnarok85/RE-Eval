@@ -58,6 +58,11 @@ public class SparqlQueries {
 				else
 					ann.setFoundIn("Abstract");
 				
+				if(obj.equalsIgnoreCase(anchor))
+					ann.setKindOfMatch("exact");
+				else
+					ann.setKindOfMatch("partial");
+				
 				ann.setAnchor(anchor);
 				ann.setAnnotation(annotation);
 				ann.setBeginIndex(bi);

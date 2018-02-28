@@ -1,0 +1,11 @@
+GeneralReport 
+ ProcessingTime	TOTAL TIME = 7 min, 4 sec
+targetRelation	Spouse
+sparqlQuery	select ?s ?o (<http://dbpedia.org/ontology/spouse> as ?p) where { ?s a <http://dbpedia.org/ontology/Person> . ?s <http://dbpedia.org/ontology/spouse> ?o . ?o a <http://dbpedia.org/ontology/Person> . } 
+DBpediaResults	10000
+	filesWithAnnotations	7073
+		AnnotationsfoundInAbstract	2450
+		AnnotationsfoundInSection	7431
+	filesWithoutAnnotations	2908
+numberOffilesNotFound	19
+	filesNotFounded	[Ryoko_Tani__谷_亮子__1, Josias,_Hereditary_Prince_of_Waldeck_and_Pyrmont__Prince_Josias__1, Lucky_Dias, Giovanna_Ewbank, Cameron_%22Buck%22_Williams, Krzysztof_Mikołaj_%22the_Thunderbolt%22_Radziwiłł, Krzysztof_Mikołaj_%22the_Thunderbolt%22_Radziwiłł, John_Graham_(Australian_politician), François-Bernard_Lépicié, Tracy_%22Bird%22_Van_Adams, Vladimir_Lenin, Kelly_Ryan__Kelly_Ryan__1, 13th_Earl_of_Devon, Stephen_%22tWitch%22_Boss, Charles_%22Buddy%22_Rogers, Michał_Kazimierz_%22Rybeńko%22_Radziwiłł, 10th_Earl_of_Devon, Jan_van_Paradijs, Emmi_Dölling]

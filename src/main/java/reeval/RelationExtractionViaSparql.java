@@ -41,21 +41,20 @@ public class RelationExtractionViaSparql {
 
 	SparqlQueries sq = new SparqlQueries();
 	
+	/*
+	 * NOTES:
+	 *    * String comparisons must be made in lowecase
+	 *    * TODO determine an action when the relation match exactly and appears in more than one section
+	 *    * TODO 	Set a variable to define if the Object found in DBpedia match exactly or partially with the annotation in the NIF file 
+	 */
+	
 	public static void main(String[] args) throws NoSuchAlgorithmException, IOException{
 		
 		File sparqlPath = new File(args[0]);
 		File[] sparqlFiles = sparqlPath.listFiles();
 		File outputFolder = new File(args[2]);
-		File outputAbstract = new File(outputFolder.getAbsoluteFile()+"/Abstract");
-		File outputNotInAbstract = new File(outputFolder.getAbsoluteFile()+"/notInAbstract");
-		File outputNotInSection = new File(outputFolder.getAbsoluteFile()+"/notInSection");
-		File outputSections = new File(outputFolder.getAbsoluteFile()+"/Sections");
-		File[] outputFiles = outputFolder.listFiles();
 		String nifPath = args[1];
 		
-		List<String> listProcessed = new ArrayList<String>();
-		List<DBpediaRelation> notInAbstractList = new ArrayList<DBpediaRelation>();
-		List<DBpediaRelation> notInSectionList = new ArrayList<DBpediaRelation>();
 		Map<String,String> mapSparqlQueries = new HashMap<String,String>();
 		List<REStats> listStats = new ArrayList<REStats>();
 		
@@ -64,12 +63,8 @@ public class RelationExtractionViaSparql {
 		GeneralReport gr = new GeneralReport();
 		TextSearcher ts = new TextSearcher();
 		for(File file : sparqlFiles) {
-			if(!file.getName().contains("Employer"))
+			if(!file.getName().contains("Spouse"))
 				continue;
-//			if(listProcessed.contains(file.getName().replace(".rq", ""))) {
-//				System.out.println("File " + file.getName().replace(".rq", "") + " was already processed.");
-//				continue;
-//			}
 			String query = re.readSparqlQueries(file);
 			logger.info(query);
 			mapSparqlQueries.put(file.getName().replace(".rq", ""),query);
@@ -79,7 +74,8 @@ public class RelationExtractionViaSparql {
 		int foundInSection = 0;
 		int filesWithAnnotation = 0;
 		int filesWithoutAnnotation = 0;
-		int filesNotFounded = 0;
+		int numberOffilesNotFound = 0;
+		List<String> filesNotFound = new ArrayList<String>();
 		boolean firstTime = true;
 		for(Map.Entry<String, String> entry : mapSparqlQueries.entrySet()) {
 			logger.info("Processing file: " + entry.getKey());
@@ -91,10 +87,8 @@ public class RelationExtractionViaSparql {
 			String timeElapsed = "";
 			List<DBpediaRelation> listRelations = new ArrayList<DBpediaRelation>();
 			listRelations.addAll(re.sq.queryDBpediaRelations(entry.getValue(),entry.getKey(),listStats));
-			
-//			notInSectionList.addAll(re.lookRelationsInSection(listRelations, nifPath, 
-//					sentenceModel, tokenizerModel, entry.getKey(), outputSections));
-			logger.info("Beging Abstract");
+			gr.setDBpediaResults(listRelations.size());
+			logger.info("Beging Process");
 			List<FileReport> listFileReports = new ArrayList<FileReport>();
 			for(DBpediaRelation rel : listRelations){
 				FileReport fr = new FileReport();
@@ -105,7 +99,7 @@ public class RelationExtractionViaSparql {
 				rel.setSbjLabel(sbjAnchor);
 				
 				String[] objSplit = rel.getObjURI().split("/");
-				String objAnchor = objSplit[objSplit.length-1].split("\\(")[0];
+				String objAnchor = objSplit[objSplit.length-1].split("\\(")[0].replace(")", ""); //eliminating parenthesis
 				objAnchor = objAnchor.replaceAll("_", " ");
 				rel.setObjLabel(objAnchor);
 				
@@ -113,9 +107,10 @@ public class RelationExtractionViaSparql {
 				
 				BZip2CompressorInputStream inputStream = re.createBz2Reader(filePath);
 				if (inputStream == null) {
-					filesNotFounded++;
+					numberOffilesNotFound++;
 					fr.setReal(false);
 					listFileReports.add(fr);
+					filesNotFound.add(sbj);
 					continue;
 				}
 				
@@ -146,22 +141,26 @@ public class RelationExtractionViaSparql {
 				filesWithoutAnnotation += (listAnnotations.size() == 0) ? 1 : 0 ;
 				filesWithAnnotation += (listAnnotations.size() > 0) ? 1: 0;
 				
-				
-				
-				
 				fr.setFilePath(filePath.getCanonicalPath());
 				fr.setNumAnnotations(listAnnotations.size());
-				re.writeResults(outputFolder+"/"+"output.tsv", listAnnotations, firstTime);
+				re.writeResults(outputFolder+"/"+entry.getKey()+".tsv", listAnnotations, firstTime);
 				firstTime = false;
+				gr.setFoundInAbstract(foundInAbstract);
+				gr.setFoundInSection(foundInSection);
+				gr.setFilesWithAnnotation(filesWithAnnotation);
+				gr.setFilesWithoutAnnotation(filesWithoutAnnotation);
+				gr.setNumberOffilesNotFound(numberOffilesNotFound);
+				gr.setFilesNotFounded(filesNotFound);
+				
 			}
-			logger.info("relations not found in abstract = " + notInAbstractList.size());
-
 			endTime = System.currentTimeMillis() - initialTime;
 			timeElapsed = String.format("TOTAL TIME = %d min, %d sec", TimeUnit.MILLISECONDS.toMinutes(endTime),
 	    			TimeUnit.MILLISECONDS.toSeconds(endTime) - 
 	    		    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(endTime)));
+			gr.setProcessingTime(timeElapsed);
 			logger.info(timeElapsed);
 			logger.info("End Abstract");
+			re.writeGeneralReport(outputFolder + "/" +  entry.getKey() + "-GeneralReport.txt", gr);
 		}
 		
 		
@@ -171,7 +170,7 @@ public class RelationExtractionViaSparql {
 			logger.info("Relation = " + stat.getPredicate() + " #Results = " + stat.getNumberResults());
 			logger.info("Files processed = " + filesWithAnnotation);
 			logger.info("Files with no annotations = " + filesWithoutAnnotation);
-			logger.info("File does not exist = " + filesNotFounded);
+			logger.info("File does not exist = " + numberOffilesNotFound);
 			logger.info("Annotations founded in Abstract = " + foundInAbstract);
 			logger.info("Annotations founded in Section = " + foundInSection);
 			
@@ -248,6 +247,11 @@ public class RelationExtractionViaSparql {
 		
 	}
 	
+	/**
+	 * @param output
+	 * @param listAnnotations
+	 * @param firstTime
+	 */
 	public void writeResults(String output, List<AnnotationB> listAnnotations, boolean firstTime){
 		if(firstTime){
 			File o = new File(output);
@@ -258,10 +262,20 @@ public class RelationExtractionViaSparql {
 		
 		try(PrintWriter pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(output,true),StandardCharsets.UTF_8))){
 			if(firstTime)
-				pw.write("Id\tS\tP\tO\tFound In\tSection\tAnchor\tText Segment\tAnchor-URI\n");
+				pw.write("Id\tS\tP\tO\tFound In\tSection\tAnchor\tKind of match\tText Segment\tAnchor-URI\n");
 			for(AnnotationB ann : listAnnotations){
 				pw.write(ann.toString() + "\n");
 			}
+			pw.close();
+		}catch(IOException e){
+			
+		}
+	}
+	
+	public void writeGeneralReport(String output, GeneralReport gr){
+		try(PrintWriter pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(output), StandardCharsets.UTF_8))){
+			pw.write(gr.toString());
+			pw.close();
 		}catch(IOException e){
 			
 		}

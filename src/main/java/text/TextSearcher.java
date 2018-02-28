@@ -406,6 +406,8 @@ public class TextSearcher {
 	}
 	
 	public String textExtractor(String context, int bi, int ei){
+		if(ei > context.length())
+			ei = context.length();
 		return context.substring(bi,ei);
 	}
 	

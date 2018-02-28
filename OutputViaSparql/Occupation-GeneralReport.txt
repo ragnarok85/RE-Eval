@@ -1,0 +1,11 @@
+GeneralReport 
+ ProcessingTime	TOTAL TIME = 7 min, 51 sec
+targetRelation	Occupation
+sparqlQuery	select ?s ?o (<http://dbpedia.org/ontology/occupation> as ?p) where {   ?s a <http://dbpedia.org/ontology/Person> . ?s <http://dbpedia.org/ontology/occupation> ?ot . ?ot a <http://dbpedia.org/ontology/PersonFunction> . ?s <http://purl.org/linguistics/gold/hypernym> ?o .} 
+DBpediaResults	10000
+	filesWithAnnotations	4326
+		AnnotationsfoundInAbstract	4069
+		AnnotationsfoundInSection	2747
+	filesWithoutAnnotations	5668
+numberOffilesNotFound	6
+	filesNotFounded	[Breno_Coelho, consumer_advocate), Robert_François_Laugier, Benjamin_Sadler, Anuja_Chauhan, Betty_Tanner]
