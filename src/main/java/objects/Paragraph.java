@@ -11,9 +11,11 @@ public class Paragraph {
 	private int endIndex;
 	private String paragraphURI;//uri
 	private String paragraphText;
+	private Section section;
 	
 	public Paragraph() {
 		this.listAnnotations = new ArrayList<AnnotationB>();
+		this.section = new Section();
 	}
 
 	public List<AnnotationB> getListAnnotations() {
@@ -62,6 +64,22 @@ public class Paragraph {
 
 	public void setParagraphText(String paragraphText) {
 		this.paragraphText = paragraphText;
+	}
+
+	public Section getSection() {
+		return section;
+	}
+
+	public void setSection(Section section) {
+		this.section = section;
+	}
+
+	@Override
+	public String toString() {
+		return "Paragraph [listAnnotations=" + listAnnotations + ", id=" + id
+				+ ", beginIndex=" + beginIndex + ", endIndex=" + endIndex
+				+ ", paragraphURI=" + paragraphURI + ", paragraphText="
+				+ paragraphText + ", sectionURI=" + section + "]";
 	}
 
 }

@@ -10,6 +10,7 @@ public class DBpediaRelation {
 	private String targetRelation;
 	private String sbjAbstract;
 	private String prdURI;
+	private int id;
 	
 	@Override
 	public boolean equals(Object other){
@@ -64,9 +65,6 @@ public class DBpediaRelation {
 	public void setObjLabel(String objLabel) {
 		this.objLabel = objLabel;
 	}
-	public String getTagetRelation() {
-		return targetRelation;
-	}
 	public void setTargetRelation(String targetRelation) {
 		this.targetRelation = targetRelation;
 	}
@@ -87,6 +85,14 @@ public class DBpediaRelation {
 
 	public String getTargetRelation() {
 		return targetRelation;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
 }

@@ -404,4 +404,9 @@ public class TextSearcher {
 		}
 		return index;
 	}
+	
+	public String textExtractor(String context, int bi, int ei){
+		return context.substring(bi,ei);
+	}
+	
 }

@@ -42,7 +42,7 @@ public enum Queries {
 			+ " ?paragraph   <http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#beginIndex> ?bi; "
 			+ "				 <http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#endIndex> ?ei. "
 			+ " } ORDER BY ?bi "),
-	SECTIONSANNOTATIONS("PREFIX nif: <http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#>"
+	SECTIONSANNOTATIONS("PREFIX nif: <http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#> "
 			+ " SELECT ?bi ?ei ?anchor ?annotation ?section ?paragraph WHERE { "
 			+ " ?section nif:hasParagraph ?paragraph. "
 			+ " ?annotation  nif:superString ?paragraph; "
@@ -50,11 +50,11 @@ public enum Queries {
 			+ "				nif:beginIndex ?bi; "
 			+ "				nif:endIndex ?ei. "
 			+ " FILTER regex(?anchor,\"**ANNOTATION**\", 'i') "
-			+ " FILTER regex(str(?notation), \"[0-9\\.].*\",'i') "
-			+ " "),
+			+ " FILTER regex(str(?notation), \"[1-9].*(?!0)\",'i') "
+			+ " } "),
 	ABSTRACTANNOTATIONS(" PREFIX skos: <http://www.w3.org/2004/02/skos/core#> "
 					+ "PREFIX nif: <http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#>"
-					+ " SELECT ?bi ?ei ?anchor ?annotation ?section ?paragraph WHERE { "
+					+ " SELECT ?bi ?ei ?anchor ?annotation ?section ?paragraph ?notation WHERE { "
 					+ " ?section nif:hasParagraph ?paragraph;"
 					+ " 		 skos:notation ?notation. "
 					+ " ?annotation  nif:superString ?paragraph; "
@@ -62,7 +62,7 @@ public enum Queries {
 					+ "				nif:beginIndex ?bi; "
 					+ "				nif:endIndex ?ei. "
 					+ " FILTER regex(?anchor,\"**ANNOTATION**\", 'i') "
-					+ " FILTER regex(str(?notation), \"0\",'i') "
+				//	+ " FILTER regex(str(?notation), \"0\",'i') "
 					+ " }"),
 	ANNOTATIONORDERBYINDEX("PREFIX nif: <http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#>"
 					+ " SELECT ?bi ?ei ?anchor ?annotation WHERE { "
@@ -70,7 +70,17 @@ public enum Queries {
 					+ "				nif:anchorOf ?anchor; "
 					+ "				nif:beginIndex ?bi; "
 					+ "				nif:endIndex ?ei. "
-					+ " }");
+					+ " }"),
+	PARAGRAPH(" PREFIX nif: <http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#> "
+			+ " SELECT ?bi ?ei WHERE { "
+			+ " <**PARAGRAPH**> nif:beginIndex ?bi; "
+			+ "  				nif:endIndex ?ei. "
+			+ " } "),
+	SECTION(" PREFIX nif: <http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#> "
+			+ " SELECT ?bi ?ei WHERE { "
+			+ " <**SECTION**> nif:beginIndex ?bi; "
+			+ "               nif:endIndex ?ei. "
+			+ " } ");
 	private String query;
 	
 	Queries(String query){

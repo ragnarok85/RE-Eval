@@ -7,11 +7,16 @@ public class AnnotationB {
 	private int endIndex;
 	private String anchor;
 	private String annotation; //URI
-	private String paragraphURI;
-	private String sectionURI;
+	private String textSegment;
+	private Paragraph paragraph;
+	private Section section;
+	private DBpediaRelation rel;
+	private String notation;
+	private String foundIn; //opts = Abstract/Section
 	
 	public AnnotationB(){
-		
+		this.paragraph = new Paragraph();
+		this.section = new Section();
 	}
 
 	public int getId() {
@@ -54,25 +59,60 @@ public class AnnotationB {
 		this.annotation = annotation;
 	}
 
-	public String getParagraphURI() {
-		return paragraphURI;
+	public Paragraph getParagraph() {
+		return paragraph;
 	}
 
-	public void setParagraphURI(String paragraphURI) {
-		this.paragraphURI = paragraphURI;
-	}
-
-	public String getSectionURI() {
-		return sectionURI;
-	}
-
-	public void setSectionURI(String sectionURI) {
-		this.sectionURI = sectionURI;
+	public void setParagraph(Paragraph paragraphURI) {
+		this.paragraph = paragraphURI;
 	}
 
 	@Override
 	public String toString() {
-		return "AnnotationB [id=" + id + ", beginIndex=" + beginIndex + ", endIndex=" + endIndex + ", anchor=" + anchor
-				+ ", annotation=" + annotation + ", paragraphURI=" + paragraphURI + ", sectionURI=" + sectionURI + "]";
+		return rel.getId() + "\t" + rel.getSbjLabel()
+				+ "\t" + rel.getTargetRelation() + "\t" + rel.getObjLabel()
+				+ "\t" + foundIn + "\t" + notation + "\t" + anchor + "\t" 
+				+ textSegment + "\t" + annotation;
 	}
+
+	public String getTextSegment() {
+		return textSegment;
+	}
+
+	public void setTextSegment(String textSegment) {
+		this.textSegment = textSegment;
+	}
+
+	public Section getSection() {
+		return section;
+	}
+
+	public void setSection(Section section) {
+		this.section = section;
+	}
+
+	public DBpediaRelation getRel() {
+		return rel;
+	}
+
+	public void setRel(DBpediaRelation rel) {
+		this.rel = rel;
+	}
+
+	public String getFoundIn() {
+		return foundIn;
+	}
+
+	public void setFoundIn(String foundIn) {
+		this.foundIn = foundIn;
+	}
+
+	public String getNotation() {
+		return notation;
+	}
+
+	public void setNotation(String notation) {
+		this.notation = notation;
+	}
+
 }

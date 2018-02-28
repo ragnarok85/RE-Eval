@@ -3,9 +3,12 @@ package reeval;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -15,18 +18,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import objects.AnnotationB;
+import objects.DBpediaRelation;
+import objects.Paragraph;
+import objects.REStats;
+import objects.Section;
+
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.util.FileManager;
 import org.apache.log4j.Logger;
 
-import objects.AnnotationB;
-import objects.DBpediaRelation;
-import objects.REStats;
 import reports.FileReport;
 import reports.GeneralReport;
 import sparql.SparqlQueries;
+import text.TextSearcher;
 
 public class RelationExtractionViaSparql {
 	
@@ -55,7 +62,7 @@ public class RelationExtractionViaSparql {
 		RelationExtractionViaSparql re = new RelationExtractionViaSparql();
 		
 		GeneralReport gr = new GeneralReport();
-		
+		TextSearcher ts = new TextSearcher();
 		for(File file : sparqlFiles) {
 			if(!file.getName().contains("Employer"))
 				continue;
@@ -68,9 +75,12 @@ public class RelationExtractionViaSparql {
 			mapSparqlQueries.put(file.getName().replace(".rq", ""),query);
 			
 		}
-		int annotationCounter = 0;
-		int notInAbstractCounter = 0;
-		int nullCounter = 0;
+		int foundInAbstract = 0;
+		int foundInSection = 0;
+		int filesWithAnnotation = 0;
+		int filesWithoutAnnotation = 0;
+		int filesNotFounded = 0;
+		boolean firstTime = true;
 		for(Map.Entry<String, String> entry : mapSparqlQueries.entrySet()) {
 			logger.info("Processing file: " + entry.getKey());
 			gr.setTargetRelation(entry.getKey());
@@ -92,35 +102,57 @@ public class RelationExtractionViaSparql {
 				String[] sbjSplit = rel.getSbjURI().split("/");
 				String sbj = sbjSplit[sbjSplit.length-1];
 				String sbjAnchor = sbj.replaceAll("_", " ");
-
+				rel.setSbjLabel(sbjAnchor);
+				
 				String[] objSplit = rel.getObjURI().split("/");
 				String objAnchor = objSplit[objSplit.length-1].split("\\(")[0];
 				objAnchor = objAnchor.replaceAll("_", " ");
+				rel.setObjLabel(objAnchor);
 				
 				File filePath = re.lookNIFFile(sbj, nifPath);
-				fr.setFilePath(filePath.getCanonicalPath());
-				fr.setSubjectURI(rel.getSbjURI());
-				fr.setSubjectAnchor(rel.getSbjLabel());
-				fr.setObjectURI(rel.getObjURI());
-				fr.setObjectAnchor(rel.getObjLabel());
 				
 				BZip2CompressorInputStream inputStream = re.createBz2Reader(filePath);
 				if (inputStream == null) {
-					nullCounter++;
+					filesNotFounded++;
 					fr.setReal(false);
 					listFileReports.add(fr);
 					continue;
 				}
 				
 				Model model = re.createJenaModel(inputStream);
+				String context = re.sq.queryContext(model);
+				List<AnnotationB> listAnnotations = re.sq.queryAnnotationAbstract(model, objAnchor);
 				
-				List<AnnotationB> listAnnotations = re.sq.queryAnnotations(model, objAnchor);
-				
-				notInAbstractCounter += (listAnnotations.size() == 0) ? 1 : 0 ;
-				annotationCounter += (listAnnotations.size() > 0) ? 1: 0;
 				for(AnnotationB ann : listAnnotations){
-					System.out.println(ann.toString());
+					Paragraph p = ann.getParagraph();
+					Section s = ann.getSection();
+					re.sq.queryParagraph(model, p);
+					re.sq.querySection(model, s);
+					p.setParagraphText(ts.textExtractor(context, p.getBeginIndex(), p.getEndIndex()));
+					s.setSectionText(ts.textExtractor(context, s.getBeginIndex(), s.getEndIndex()));
+					
+					ann.setRel(rel);
+					ann.setParagraph(p);
+					ann.getParagraph().setSection(s);
+					ann.setTextSegment(ts.textExtractor(context, p.getBeginIndex(), ann.getEndIndex()).replace("\n", " "));
+					ann.setId(filesWithAnnotation);
+					if(ann.getFoundIn().equals("Abstract"))
+						foundInAbstract++;
+					else
+						foundInSection++;
+					
 				}
+				
+				filesWithoutAnnotation += (listAnnotations.size() == 0) ? 1 : 0 ;
+				filesWithAnnotation += (listAnnotations.size() > 0) ? 1: 0;
+				
+				
+				
+				
+				fr.setFilePath(filePath.getCanonicalPath());
+				fr.setNumAnnotations(listAnnotations.size());
+				re.writeResults(outputFolder+"/"+"output.tsv", listAnnotations, firstTime);
+				firstTime = false;
 			}
 			logger.info("relations not found in abstract = " + notInAbstractList.size());
 
@@ -132,12 +164,17 @@ public class RelationExtractionViaSparql {
 			logger.info("End Abstract");
 		}
 		
+		
+		
 		for(REStats stat : listStats) {
 			
 			logger.info("Relation = " + stat.getPredicate() + " #Results = " + stat.getNumberResults());
-			logger.info("Relations found in Abstract = " + annotationCounter);
-			logger.info("Relations not found in Abstract = " + notInAbstractCounter);
-			logger.info("File does not exist = " + nullCounter);
+			logger.info("Files processed = " + filesWithAnnotation);
+			logger.info("Files with no annotations = " + filesWithoutAnnotation);
+			logger.info("File does not exist = " + filesNotFounded);
+			logger.info("Annotations founded in Abstract = " + foundInAbstract);
+			logger.info("Annotations founded in Section = " + foundInSection);
+			
 		}
 }
 	
@@ -209,5 +246,24 @@ public class RelationExtractionViaSparql {
 		//setPrefixes(model);
 		return model;
 		
+	}
+	
+	public void writeResults(String output, List<AnnotationB> listAnnotations, boolean firstTime){
+		if(firstTime){
+			File o = new File(output);
+			if(o.exists())
+				o.delete();
+		}
+		
+		
+		try(PrintWriter pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(output,true),StandardCharsets.UTF_8))){
+			if(firstTime)
+				pw.write("Id\tS\tP\tO\tFound In\tSection\tAnchor\tText Segment\tAnchor-URI\n");
+			for(AnnotationB ann : listAnnotations){
+				pw.write(ann.toString() + "\n");
+			}
+		}catch(IOException e){
+			
+		}
 	}
 }

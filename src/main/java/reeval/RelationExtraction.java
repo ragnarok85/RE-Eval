@@ -160,7 +160,7 @@ public class RelationExtraction {
 		List<String> listArticlesNotFound = new ArrayList<String>();
 		SparqlQueries sq = new SparqlQueries();
 		
-		logger.info(listRelations.get(0).getTagetRelation());
+		logger.info(listRelations.get(0).getTargetRelation());
 		int counterRels = 0;
 		for(DBpediaRelation rel : listRelations) {
 			
@@ -252,7 +252,7 @@ public class RelationExtraction {
 		List<Thread> listThreads = new ArrayList<Thread>();
 		Set<DBpediaRelation> setNotInSection = new HashSet<DBpediaRelation>();
 		
-		logger.info(listRelations.get(0).getTagetRelation());
+		logger.info(listRelations.get(0).getTargetRelation());
 		
 		int fileCounter = 0;
 		logger.info("number of relations found = " + listRelations.size());

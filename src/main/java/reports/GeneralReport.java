@@ -2,23 +2,18 @@ package reports;
 
 public class GeneralReport {
 	
-	private String filePath;
 	private String targetRelation;
 	private String sparqlQuery;
 	private int DBpediaResults;
 	private int foundInAbstract;
-	private int notFoundInAbstract;
+	private int foundInSection;
+	private int filesWithAnnotation;
+	private int filesWithoutAnnotation;
+	private int filesNotFounded;
+	
 	private int numberOffilesNotFound;
 
 	public GeneralReport() {
-	}
-
-	public String getFilePath() {
-		return filePath;
-	}
-
-	public void setFilePath(String filePath) {
-		this.filePath = filePath;
 	}
 
 	public String getTargetRelation() {
@@ -53,12 +48,36 @@ public class GeneralReport {
 		this.foundInAbstract = foundInAbstract;
 	}
 
-	public int getNotFoundInAbstract() {
-		return notFoundInAbstract;
+	public int getFoundInSection() {
+		return foundInSection;
 	}
 
-	public void setNotFoundInAbstract(int notFoundInAbstract) {
-		this.notFoundInAbstract = notFoundInAbstract;
+	public void setFoundInSection(int foundInSection) {
+		this.foundInSection = foundInSection;
+	}
+
+	public int getFilesWithAnnotation() {
+		return filesWithAnnotation;
+	}
+
+	public void setFilesWithAnnotation(int filesWithAnnotation) {
+		this.filesWithAnnotation = filesWithAnnotation;
+	}
+
+	public int getFilesWithoutAnnotation() {
+		return filesWithoutAnnotation;
+	}
+
+	public void setFilesWithoutAnnotation(int filesWithoutAnnotation) {
+		this.filesWithoutAnnotation = filesWithoutAnnotation;
+	}
+
+	public int getFilesNotFounded() {
+		return filesNotFounded;
+	}
+
+	public void setFilesNotFounded(int filesNotFounded) {
+		this.filesNotFounded = filesNotFounded;
 	}
 
 	public int getNumberOffilesNotFound() {
@@ -69,4 +88,5 @@ public class GeneralReport {
 		this.numberOffilesNotFound = numberOffilesNotFound;
 	}
 
+	
 }

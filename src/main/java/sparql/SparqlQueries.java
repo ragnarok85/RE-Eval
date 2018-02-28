@@ -32,12 +32,53 @@ public class SparqlQueries {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public List<AnnotationB> queryAnnotations(Model model, String obj){
+	public List<AnnotationB> queryAnnotationAbstract(Model model, String obj){
 		List<AnnotationB> listAnnotations = new ArrayList<AnnotationB>();
 		obj = obj.replace("+", ""); //replacing the pattern symbol +
 		String queryString = Queries.ABSTRACTANNOTATIONS.query().replace("**ANNOTATION**", obj);
 //		System.out.println(queryString);
 		Query query = QueryFactory.create(queryString);
+		
+		try(QueryExecution qexec = QueryExecutionFactory.create(query, model)){
+			ResultSet rs = qexec.execSelect();
+			while(rs.hasNext()){
+				QuerySolution qs = rs.next();
+				AnnotationB ann = new AnnotationB();
+				//?bi ?ei ?anchor ?annotation ?section ?paragraph
+				int bi = qs.getLiteral("?bi").getInt();
+				int ei = qs.getLiteral("?ei").getInt();
+				String anchor = qs.getLiteral("?anchor").getString();
+				String annotation = qs.getResource("?annotation").getURI();
+				String section = qs.getResource("?section").getURI();
+				String paragraph = qs.getResource("?paragraph").getURI();
+				String notation = qs.getLiteral("?notation").getString();
+				
+				if(!notation.substring(0, 1).equals("0"))
+					ann.setFoundIn("Section");
+				else
+					ann.setFoundIn("Abstract");
+				
+				ann.setAnchor(anchor);
+				ann.setAnnotation(annotation);
+				ann.setBeginIndex(bi);
+				ann.setEndIndex(ei);
+				ann.getParagraph().setParagraphURI(paragraph);;
+				ann.getSection().setSectionURI(section);
+				ann.setNotation(notation);
+				listAnnotations.add(ann);
+				//listAnnotations.add( bi + "\t" + ei + "\t" + anchor + "\t" + annotation + "\t" + section + "\t" + paragraph);
+			}
+		}
+		return listAnnotations;
+	}
+	
+	public List<AnnotationB> queryAnnotationSections(Model model, String obj){
+		List<AnnotationB> listAnnotations = new ArrayList<AnnotationB>();
+		obj = obj.replace("+", ""); //replacing the pattern symbol +
+		String queryString = Queries.SECTIONSANNOTATIONS.query().replace("**ANNOTATION**", obj);
+//		System.out.println(queryString);
+		Query query = QueryFactory.create(queryString);
+		
 		try(QueryExecution qexec = QueryExecutionFactory.create(query, model)){
 			ResultSet rs = qexec.execSelect();
 			while(rs.hasNext()){
@@ -55,8 +96,8 @@ public class SparqlQueries {
 				ann.setAnnotation(annotation);
 				ann.setBeginIndex(bi);
 				ann.setEndIndex(ei);
-				ann.setParagraphURI(paragraph);
-				ann.setSectionURI(section);
+				ann.getParagraph().setParagraphURI(paragraph);;
+				ann.getSection().setSectionURI(section);
 				
 				listAnnotations.add(ann);
 				//listAnnotations.add( bi + "\t" + ei + "\t" + anchor + "\t" + annotation + "\t" + section + "\t" + paragraph);
@@ -64,6 +105,7 @@ public class SparqlQueries {
 		}
 		return listAnnotations;
 	}
+	
 	public List<Annotation> queryAbstractAnnotations(Model model) {
 		List<Annotation> listAnnotations = new ArrayList<Annotation>();
 		
@@ -155,6 +197,32 @@ public class SparqlQueries {
 		return listParagraph;
 	}
 	
+	public void queryParagraph(Model model, Paragraph p){
+		String queryString = Queries.PARAGRAPH.query().replace("**PARAGRAPH**", p.getParagraphURI());
+		Query query = QueryFactory.create(queryString);
+		try(QueryExecution qexec = QueryExecutionFactory.create(query, model)){
+			ResultSet rs = qexec.execSelect();
+			while(rs.hasNext()){
+				QuerySolution qs = rs.next();
+				p.setBeginIndex(qs.getLiteral("?bi").getInt());
+				p.setEndIndex(qs.getLiteral("?ei").getInt());
+			}
+		}
+	}
+	
+	public void querySection(Model model, Section s){
+		String queryString = Queries.SECTION.query().replace("**SECTION**", s.getSectionURI());
+		Query query = QueryFactory.create(queryString);
+		try(QueryExecution qexec = QueryExecutionFactory.create(query, model)){
+			ResultSet rs = qexec.execSelect();
+			while(rs.hasNext()){
+				QuerySolution qs = rs.next();
+				s.setBeginIndex(qs.getLiteral("?bi").getInt());
+				s.setEndIndex(qs.getLiteral("?ei").getInt());
+			}
+		}
+	}
+	
 	
 	
 	/*
@@ -176,12 +244,12 @@ public class SparqlQueries {
 				DBpediaRelation relation = new DBpediaRelation(targetRelation);
 				
 				QuerySolution qs = result.next();
-				counterResults++;
 				
 				String s = new String(qs.getResource("?s").getURI().getBytes(),"UTF-8");
 				String o = new String(qs.getResource("?o").getURI().getBytes(),"UTF-8");
 				String p = qs.getResource("?p").getURI();
 				
+				relation.setId(counterResults++);
 				relation.setSbjURI(s);
 				relation.setObjURI(o);
 				relation.setPrdURI(p);
