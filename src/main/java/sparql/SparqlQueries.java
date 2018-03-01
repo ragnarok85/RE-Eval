@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 
 import objects.Annotation;
-import objects.AnnotationB;
 import objects.DBpediaRelation;
 import objects.Paragraph;
 import objects.REStats;
@@ -32,85 +31,6 @@ public class SparqlQueries {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public List<AnnotationB> queryAnnotationAbstract(Model model, String obj){
-		List<AnnotationB> listAnnotations = new ArrayList<AnnotationB>();
-		obj = obj.replace("+", ""); //replacing the pattern symbol +
-		String queryString = Queries.ABSTRACTANNOTATIONS.query().replace("**ANNOTATION**", obj);
-//		System.out.println(queryString);
-		Query query = QueryFactory.create(queryString);
-		
-		try(QueryExecution qexec = QueryExecutionFactory.create(query, model)){
-			ResultSet rs = qexec.execSelect();
-			while(rs.hasNext()){
-				QuerySolution qs = rs.next();
-				AnnotationB ann = new AnnotationB();
-				//?bi ?ei ?anchor ?annotation ?section ?paragraph
-				int bi = qs.getLiteral("?bi").getInt();
-				int ei = qs.getLiteral("?ei").getInt();
-				String anchor = qs.getLiteral("?anchor").getString();
-				String annotation = qs.getResource("?annotation").getURI();
-				String section = qs.getResource("?section").getURI();
-				String paragraph = qs.getResource("?paragraph").getURI();
-				String notation = qs.getLiteral("?notation").getString();
-				
-				if(!notation.substring(0, 1).equals("0"))
-					ann.setFoundIn("Section");
-				else
-					ann.setFoundIn("Abstract");
-				
-				if(obj.equalsIgnoreCase(anchor))
-					ann.setKindOfMatch("exact");
-				else
-					ann.setKindOfMatch("partial");
-				
-				ann.setAnchor(anchor);
-				ann.setAnnotation(annotation);
-				ann.setBeginIndex(bi);
-				ann.setEndIndex(ei);
-				ann.getParagraph().setParagraphURI(paragraph);;
-				ann.getSection().setSectionURI(section);
-				ann.setNotation(notation);
-				listAnnotations.add(ann);
-				//listAnnotations.add( bi + "\t" + ei + "\t" + anchor + "\t" + annotation + "\t" + section + "\t" + paragraph);
-			}
-		}
-		return listAnnotations;
-	}
-	
-	public List<AnnotationB> queryAnnotationSections(Model model, String obj){
-		List<AnnotationB> listAnnotations = new ArrayList<AnnotationB>();
-		obj = obj.replace("+", ""); //replacing the pattern symbol +
-		String queryString = Queries.SECTIONSANNOTATIONS.query().replace("**ANNOTATION**", obj);
-//		System.out.println(queryString);
-		Query query = QueryFactory.create(queryString);
-		
-		try(QueryExecution qexec = QueryExecutionFactory.create(query, model)){
-			ResultSet rs = qexec.execSelect();
-			while(rs.hasNext()){
-				QuerySolution qs = rs.next();
-				AnnotationB ann = new AnnotationB();
-				//?bi ?ei ?anchor ?annotation ?section ?paragraph
-				int bi = qs.getLiteral("?bi").getInt();
-				int ei = qs.getLiteral("?ei").getInt();
-				String anchor = qs.getLiteral("?anchor").getString();
-				String annotation = qs.getResource("?annotation").getURI();
-				String section = qs.getResource("?section").getURI();
-				String paragraph = qs.getResource("?paragraph").getURI();
-				
-				ann.setAnchor(anchor);
-				ann.setAnnotation(annotation);
-				ann.setBeginIndex(bi);
-				ann.setEndIndex(ei);
-				ann.getParagraph().setParagraphURI(paragraph);;
-				ann.getSection().setSectionURI(section);
-				
-				listAnnotations.add(ann);
-				//listAnnotations.add( bi + "\t" + ei + "\t" + anchor + "\t" + annotation + "\t" + section + "\t" + paragraph);
-			}
-		}
-		return listAnnotations;
-	}
-	
 	public List<Annotation> queryAbstractAnnotations(Model model) {
 		List<Annotation> listAnnotations = new ArrayList<Annotation>();
 		
@@ -132,8 +52,8 @@ public class SparqlQueries {
 		return listAnnotations;
 	}
 	
-	public List<AnnotationB> queryOrderAnnotation(Model model, String paragraph){
-		List<AnnotationB> listAnnotation = new ArrayList<AnnotationB>();
+	public List<Annotation> queryOrderAnnotation(Model model, String paragraph){
+		List<Annotation> listAnnotation = new ArrayList<Annotation>();
 		String queryString = Queries.ANNOTATIONORDERBYINDEX.query().replace("**PARAGRAPH**", paragraph);
 		Query query = QueryFactory.create(queryString);
 		try(QueryExecution qexec = QueryExecutionFactory.create(query, model)){
@@ -141,7 +61,7 @@ public class SparqlQueries {
 			int counter = 0;
 			while(rs.hasNext()){
 				QuerySolution qs = rs.next();
-				AnnotationB ann = new AnnotationB();
+				Annotation ann = new Annotation();
 				int bi = qs.getLiteral("?bi").getInt();
 				int ei = qs.getLiteral("?ei").getInt();
 				String anchor = qs.getLiteral("?anchor").getString();
@@ -150,7 +70,7 @@ public class SparqlQueries {
 				ann.setAnchor(anchor);
 				ann.setBeginIndex(bi);
 				ann.setEndIndex(ei);
-				ann.setAnnotation(annotation);
+				ann.setUri(annotation);
 				ann.setId(counter++);
 			}
 		}
@@ -201,34 +121,6 @@ public class SparqlQueries {
 		}
 		return listParagraph;
 	}
-	
-	public void queryParagraph(Model model, Paragraph p){
-		String queryString = Queries.PARAGRAPH.query().replace("**PARAGRAPH**", p.getParagraphURI());
-		Query query = QueryFactory.create(queryString);
-		try(QueryExecution qexec = QueryExecutionFactory.create(query, model)){
-			ResultSet rs = qexec.execSelect();
-			while(rs.hasNext()){
-				QuerySolution qs = rs.next();
-				p.setBeginIndex(qs.getLiteral("?bi").getInt());
-				p.setEndIndex(qs.getLiteral("?ei").getInt());
-			}
-		}
-	}
-	
-	public void querySection(Model model, Section s){
-		String queryString = Queries.SECTION.query().replace("**SECTION**", s.getSectionURI());
-		Query query = QueryFactory.create(queryString);
-		try(QueryExecution qexec = QueryExecutionFactory.create(query, model)){
-			ResultSet rs = qexec.execSelect();
-			while(rs.hasNext()){
-				QuerySolution qs = rs.next();
-				s.setBeginIndex(qs.getLiteral("?bi").getInt());
-				s.setEndIndex(qs.getLiteral("?ei").getInt());
-			}
-		}
-	}
-	
-	
 	
 	/*
 	 * SPARQL DBpedia

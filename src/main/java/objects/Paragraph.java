@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Paragraph {
 
-	private List<AnnotationB> listAnnotations;
+	private List<Annotation> listAnnotations;
 	private int id; 
 	private int beginIndex;
 	private int endIndex;
@@ -14,15 +14,15 @@ public class Paragraph {
 	private Section section;
 	
 	public Paragraph() {
-		this.listAnnotations = new ArrayList<AnnotationB>();
+		this.listAnnotations = new ArrayList<Annotation>();
 		this.section = new Section();
 	}
 
-	public List<AnnotationB> getListAnnotations() {
+	public List<Annotation> getListAnnotations() {
 		return listAnnotations;
 	}
 
-	public void setListAnnotations(List<AnnotationB> listAnnotations) {
+	public void setListAnnotations(List<Annotation> listAnnotations) {
 		this.listAnnotations = listAnnotations;
 	}
 
