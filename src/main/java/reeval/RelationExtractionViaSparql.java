@@ -21,7 +21,6 @@ import java.util.concurrent.TimeUnit;
 import objects.AnnotationB;
 import objects.DBpediaRelation;
 import objects.Paragraph;
-import objects.REStats;
 import objects.Section;
 
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
@@ -56,7 +55,6 @@ public class RelationExtractionViaSparql {
 		String nifPath = args[1];
 		
 		Map<String,String> mapSparqlQueries = new HashMap<String,String>();
-		List<REStats> listStats = new ArrayList<REStats>();
 		
 		RelationExtractionViaSparql re = new RelationExtractionViaSparql();
 		
@@ -86,7 +84,7 @@ public class RelationExtractionViaSparql {
 			Long endTime = 0L;
 			String timeElapsed = "";
 			List<DBpediaRelation> listRelations = new ArrayList<DBpediaRelation>();
-			listRelations.addAll(re.sq.queryDBpediaRelations(entry.getValue(),entry.getKey(),listStats));
+			listRelations.addAll(re.sq.queryDBpediaRelations(entry.getValue(),entry.getKey()));
 			gr.setDBpediaResults(listRelations.size());
 			logger.info("Beging Process");
 			List<FileReport> listFileReports = new ArrayList<FileReport>();
@@ -161,13 +159,7 @@ public class RelationExtractionViaSparql {
 			logger.info(timeElapsed);
 			logger.info("End Abstract");
 			re.writeGeneralReport(outputFolder + "/" +  entry.getKey() + "-GeneralReport.txt", gr);
-		}
-		
-		
-		
-		for(REStats stat : listStats) {
 			
-			logger.info("Relation = " + stat.getPredicate() + " #Results = " + stat.getNumberResults());
 			logger.info("Files processed = " + filesWithAnnotation);
 			logger.info("Files with no annotations = " + filesWithoutAnnotation);
 			logger.info("File does not exist = " + numberOffilesNotFound);
