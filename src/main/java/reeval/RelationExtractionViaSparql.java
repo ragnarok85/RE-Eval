@@ -42,7 +42,7 @@ public class RelationExtractionViaSparql {
 	
 	/*
 	 * NOTES:
-	 *    * String comparisons must be made in lowecase
+	 *    * String comparisons must be made in lowercase
 	 *    * TODO determine an action when the relation match exactly and appears in more than one section
 	 *    * TODO 	Set a variable to define if the Object found in DBpedia match exactly or partially with the annotation in the NIF file 
 	 */
