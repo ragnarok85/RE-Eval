@@ -1,5 +1,5 @@
 GeneralReport 
- ProcessingTime	TOTAL TIME = 7 min, 52 sec
+ ProcessingTime	TOTAL TIME = 8 min, 15 sec
 targetRelation	PartyAfiiliation
 sparqlQuery	select ?s ?o (<http://dbpedia.org/ontology/party> as ?p) where { ?s a <http://dbpedia.org/ontology/Person> . ?s <http://dbpedia.org/ontology/party> ?o . ?o a <http://dbpedia.org/ontology/PoliticalParty> . } 
 DBpediaResults	10000

@@ -1,0 +1,133 @@
+2018-03-15 18:21:06 INFO  RelationExtractionViaSparql:67 - select ?s ?o (<http://dbpedia.org/ontology/spouse> as ?p) where { ?s a <http://dbpedia.org/ontology/Person> . ?s <http://dbpedia.org/ontology/spouse> ?o . ?o a <http://dbpedia.org/ontology/Person> . } 
+2018-03-15 18:21:06 INFO  RelationExtractionViaSparql:79 - Processing file: Spouse
+2018-03-15 18:21:12 INFO  RelationExtractionViaSparql:89 - Beging Process
+2018-03-16 10:45:02 INFO  RelationExtractionViaSparql:67 - select ?s ?o (<http://dbpedia.org/ontology/spouse> as ?p) where { ?s a <http://dbpedia.org/ontology/Person> . ?s <http://dbpedia.org/ontology/spouse> ?o . ?o a <http://dbpedia.org/ontology/Person> . } 
+2018-03-16 10:45:02 INFO  RelationExtractionViaSparql:79 - Processing file: Spouse
+2018-03-16 10:45:10 INFO  RelationExtractionViaSparql:89 - Beging Process
+2018-03-16 10:54:31 INFO  RelationExtractionViaSparql:159 - TOTAL TIME = 9 min, 29 sec
+2018-03-16 10:54:31 INFO  RelationExtractionViaSparql:160 - End Abstract
+2018-03-16 10:54:31 INFO  RelationExtractionViaSparql:163 - Files processed = 7073
+2018-03-16 10:54:31 INFO  RelationExtractionViaSparql:164 - Files with no annotations = 2908
+2018-03-16 10:54:31 INFO  RelationExtractionViaSparql:165 - File does not exist = 19
+2018-03-16 10:54:31 INFO  RelationExtractionViaSparql:166 - Annotations founded in Abstract = 2450
+2018-03-16 10:54:31 INFO  RelationExtractionViaSparql:167 - Annotations founded in Section = 7431
+2018-03-16 11:05:28 INFO  RelationExtractionViaSparql:67 - select ?s ?o (<http://dbpedia.org/ontology/award> as ?p) where { ?s a <http://dbpedia.org/ontology/Person> . ?s <http://dbpedia.org/ontology/award> ?o . ?o a <http://dbpedia.org/ontology/Award>. } 
+2018-03-16 11:05:28 INFO  RelationExtractionViaSparql:67 - select ?s ?o (<http://dbpedia.org/ontology/child> as ?p) where { ?s a <http://dbpedia.org/ontology/Person> . ?s <http://dbpedia.org/ontology/child> ?o . ?o a <http://dbpedia.org/ontology/Person> . } 
+2018-03-16 11:05:28 INFO  RelationExtractionViaSparql:67 - select ?s ?o (<http://dbpedia.org/ontology/birthPlace> as ?p) where { ?s a <http://dbpedia.org/ontology/Person> . ?s <http://dbpedia.org/ontology/birthPlace> ?o . ?o a <http://dbpedia.org/ontology/City> . } 
+2018-03-16 11:05:28 INFO  RelationExtractionViaSparql:67 - select ?s ?o (<http://dbpedia.org/ontology/residence> as ?p) where { ?s a <http://dbpedia.org/ontology/Person> . ?s <http://dbpedia.org/ontology/residence> ?o . ?o a <http://dbpedia.org/ontology/City> . } 
+2018-03-16 11:05:28 INFO  RelationExtractionViaSparql:67 - select ?s ?o (<http://dbpedia.org/ontology/employer> as ?p) where {  ?s a <http://dbpedia.org/ontology/Person>.  ?s <http://dbpedia.org/ontology/employer> ?o.  ?o a <http://dbpedia.org/ontology/Organisation>. } 
+2018-03-16 11:05:28 INFO  RelationExtractionViaSparql:67 - select ?s ?o (<http://dbpedia.org/ontology/nationality> as ?p) where { ?s a <http://dbpedia.org/ontology/Person> . ?s <http://dbpedia.org/ontology/nationality> ?o . ?o a <http://dbpedia.org/ontology/Country> . } 
+2018-03-16 11:05:28 INFO  RelationExtractionViaSparql:67 - select ?s ?o (<http://dbpedia.org/ontology/occupation> as ?p) where {   ?s a <http://dbpedia.org/ontology/Person> . ?s <http://dbpedia.org/ontology/occupation> ?ot . ?ot a <http://dbpedia.org/ontology/PersonFunction> . ?s <http://purl.org/linguistics/gold/hypernym> ?o .} 
+2018-03-16 11:05:28 INFO  RelationExtractionViaSparql:67 - select ?s ?o (<http://dbpedia.org/ontology/parent> as ?p) where { ?s a <http://dbpedia.org/ontology/Person> . ?s <http://dbpedia.org/ontology/parent> ?o . ?o a <http://dbpedia.org/ontology/Person> . } 
+2018-03-16 11:05:28 INFO  RelationExtractionViaSparql:67 - select ?s ?o (<http://dbpedia.org/ontology/party> as ?p) where { ?s a <http://dbpedia.org/ontology/Person> . ?s <http://dbpedia.org/ontology/party> ?o . ?o a <http://dbpedia.org/ontology/PoliticalParty> . } 
+2018-03-16 11:05:28 INFO  RelationExtractionViaSparql:67 - select ?s ?o (<http://dbpedia.org/ontology/almaMater> as ?p) where { ?s a <http://dbpedia.org/ontology/Person> . ?s <http://dbpedia.org/ontology/almaMater> ?o . ?o a <http://dbpedia.org/ontology/EducationalInstitution>. } 
+2018-03-16 11:05:28 INFO  RelationExtractionViaSparql:67 - select ?s ?o (<http://dbpedia.org/ontology/child> as ?p) where { ?s a <http://dbpedia.org/ontology/Person> . ?s <http://dbpedia.org/ontology/child> ?o . ?o a <http://dbpedia.org/ontology/Person> . } 
+2018-03-16 11:05:28 INFO  RelationExtractionViaSparql:67 - select ?s ?o (<http://dbpedia.org/ontology/spouse> as ?p) where { ?s a <http://dbpedia.org/ontology/Person> . ?s <http://dbpedia.org/ontology/spouse> ?o . ?o a <http://dbpedia.org/ontology/Person> . } 
+2018-03-16 11:05:28 INFO  RelationExtractionViaSparql:79 - Processing file: Occupation
+2018-03-16 11:05:34 INFO  RelationExtractionViaSparql:89 - Beging Process
+2018-03-16 11:14:12 INFO  RelationExtractionViaSparql:159 - TOTAL TIME = 8 min, 44 sec
+2018-03-16 11:14:13 INFO  RelationExtractionViaSparql:160 - End Abstract
+2018-03-16 11:14:13 INFO  RelationExtractionViaSparql:163 - Files processed = 4326
+2018-03-16 11:14:13 INFO  RelationExtractionViaSparql:164 - Files with no annotations = 5668
+2018-03-16 11:14:13 INFO  RelationExtractionViaSparql:165 - File does not exist = 6
+2018-03-16 11:14:13 INFO  RelationExtractionViaSparql:166 - Annotations founded in Abstract = 4069
+2018-03-16 11:14:13 INFO  RelationExtractionViaSparql:167 - Annotations founded in Section = 2747
+2018-03-16 11:14:13 INFO  RelationExtractionViaSparql:79 - Processing file: Awards
+2018-03-16 11:14:17 INFO  RelationExtractionViaSparql:89 - Beging Process
+2018-03-16 11:19:57 INFO  RelationExtractionViaSparql:159 - TOTAL TIME = 5 min, 44 sec
+2018-03-16 11:19:57 INFO  RelationExtractionViaSparql:160 - End Abstract
+2018-03-16 11:19:57 INFO  RelationExtractionViaSparql:163 - Files processed = 9657
+2018-03-16 11:19:57 INFO  RelationExtractionViaSparql:164 - Files with no annotations = 10319
+2018-03-16 11:19:57 INFO  RelationExtractionViaSparql:165 - File does not exist = 24
+2018-03-16 11:19:57 INFO  RelationExtractionViaSparql:166 - Annotations founded in Abstract = 5805
+2018-03-16 11:19:57 INFO  RelationExtractionViaSparql:167 - Annotations founded in Section = 7972
+2018-03-16 11:19:57 INFO  RelationExtractionViaSparql:79 - Processing file: PartyAfiiliation
+2018-03-16 11:20:03 INFO  RelationExtractionViaSparql:89 - Beging Process
+2018-03-16 11:28:12 INFO  RelationExtractionViaSparql:159 - TOTAL TIME = 8 min, 15 sec
+2018-03-16 11:28:12 INFO  RelationExtractionViaSparql:160 - End Abstract
+2018-03-16 11:28:12 INFO  RelationExtractionViaSparql:163 - Files processed = 12288
+2018-03-16 11:28:12 INFO  RelationExtractionViaSparql:164 - Files with no annotations = 17555
+2018-03-16 11:28:12 INFO  RelationExtractionViaSparql:165 - File does not exist = 157
+2018-03-16 11:28:12 INFO  RelationExtractionViaSparql:166 - Annotations founded in Abstract = 7802
+2018-03-16 11:28:12 INFO  RelationExtractionViaSparql:167 - Annotations founded in Section = 9571
+2018-03-16 11:28:12 INFO  RelationExtractionViaSparql:79 - Processing file: CityOfBirth
+2018-03-16 11:28:21 INFO  RelationExtractionViaSparql:89 - Beging Process
+2018-03-16 11:35:07 INFO  RelationExtractionViaSparql:159 - TOTAL TIME = 6 min, 54 sec
+2018-03-16 11:35:07 INFO  RelationExtractionViaSparql:160 - End Abstract
+2018-03-16 11:35:07 INFO  RelationExtractionViaSparql:163 - Files processed = 17705
+2018-03-16 11:35:07 INFO  RelationExtractionViaSparql:164 - Files with no annotations = 22070
+2018-03-16 11:35:07 INFO  RelationExtractionViaSparql:165 - File does not exist = 225
+2018-03-16 11:35:07 INFO  RelationExtractionViaSparql:166 - Annotations founded in Abstract = 11508
+2018-03-16 11:35:07 INFO  RelationExtractionViaSparql:167 - Annotations founded in Section = 12976
+2018-03-16 11:35:07 INFO  RelationExtractionViaSparql:79 - Processing file: Spouse
+2018-03-16 11:35:09 INFO  RelationExtractionViaSparql:89 - Beging Process
+2018-03-16 11:42:12 INFO  RelationExtractionViaSparql:159 - TOTAL TIME = 7 min, 5 sec
+2018-03-16 11:42:12 INFO  RelationExtractionViaSparql:160 - End Abstract
+2018-03-16 11:42:12 INFO  RelationExtractionViaSparql:163 - Files processed = 24778
+2018-03-16 11:42:12 INFO  RelationExtractionViaSparql:164 - Files with no annotations = 24978
+2018-03-16 11:42:12 INFO  RelationExtractionViaSparql:165 - File does not exist = 244
+2018-03-16 11:42:12 INFO  RelationExtractionViaSparql:166 - Annotations founded in Abstract = 13958
+2018-03-16 11:42:12 INFO  RelationExtractionViaSparql:167 - Annotations founded in Section = 20407
+2018-03-16 11:42:12 INFO  RelationExtractionViaSparql:79 - Processing file: Employer
+2018-03-16 11:42:15 INFO  RelationExtractionViaSparql:89 - Beging Process
+2018-03-16 11:45:23 INFO  RelationExtractionViaSparql:159 - TOTAL TIME = 3 min, 10 sec
+2018-03-16 11:45:23 INFO  RelationExtractionViaSparql:160 - End Abstract
+2018-03-16 11:45:23 INFO  RelationExtractionViaSparql:163 - Files processed = 28645
+2018-03-16 11:45:23 INFO  RelationExtractionViaSparql:164 - Files with no annotations = 26006
+2018-03-16 11:45:23 INFO  RelationExtractionViaSparql:165 - File does not exist = 257
+2018-03-16 11:45:23 INFO  RelationExtractionViaSparql:166 - Annotations founded in Abstract = 17063
+2018-03-16 11:45:23 INFO  RelationExtractionViaSparql:167 - Annotations founded in Section = 24510
+2018-03-16 11:45:23 INFO  RelationExtractionViaSparql:79 - Processing file: Parents
+2018-03-16 11:45:30 INFO  RelationExtractionViaSparql:89 - Beging Process
+2018-03-16 11:51:00 INFO  RelationExtractionViaSparql:159 - TOTAL TIME = 5 min, 36 sec
+2018-03-16 11:51:00 INFO  RelationExtractionViaSparql:160 - End Abstract
+2018-03-16 11:51:00 INFO  RelationExtractionViaSparql:163 - Files processed = 35359
+2018-03-16 11:51:00 INFO  RelationExtractionViaSparql:164 - Files with no annotations = 29263
+2018-03-16 11:51:00 INFO  RelationExtractionViaSparql:165 - File does not exist = 286
+2018-03-16 11:51:00 INFO  RelationExtractionViaSparql:166 - Annotations founded in Abstract = 20711
+2018-03-16 11:51:00 INFO  RelationExtractionViaSparql:167 - Annotations founded in Section = 29471
+2018-03-16 11:51:00 INFO  RelationExtractionViaSparql:79 - Processing file: CityOfResidence
+2018-03-16 11:51:07 INFO  RelationExtractionViaSparql:89 - Beging Process
+2018-03-16 11:58:12 INFO  RelationExtractionViaSparql:159 - TOTAL TIME = 7 min, 12 sec
+2018-03-16 11:58:12 INFO  RelationExtractionViaSparql:160 - End Abstract
+2018-03-16 11:58:12 INFO  RelationExtractionViaSparql:163 - Files processed = 39968
+2018-03-16 11:58:12 INFO  RelationExtractionViaSparql:164 - Files with no annotations = 34623
+2018-03-16 11:58:12 INFO  RelationExtractionViaSparql:165 - File does not exist = 317
+2018-03-16 11:58:12 INFO  RelationExtractionViaSparql:166 - Annotations founded in Abstract = 23569
+2018-03-16 11:58:12 INFO  RelationExtractionViaSparql:167 - Annotations founded in Section = 34653
+2018-03-16 11:58:12 INFO  RelationExtractionViaSparql:79 - Processing file: Children
+2018-03-16 11:58:18 INFO  RelationExtractionViaSparql:89 - Beging Process
+2018-03-16 12:04:25 INFO  RelationExtractionViaSparql:159 - TOTAL TIME = 6 min, 12 sec
+2018-03-16 12:04:25 INFO  RelationExtractionViaSparql:160 - End Abstract
+2018-03-16 12:04:25 INFO  RelationExtractionViaSparql:163 - Files processed = 45570
+2018-03-16 12:04:25 INFO  RelationExtractionViaSparql:164 - Files with no annotations = 38988
+2018-03-16 12:04:25 INFO  RelationExtractionViaSparql:165 - File does not exist = 350
+2018-03-16 12:04:25 INFO  RelationExtractionViaSparql:166 - Annotations founded in Abstract = 25332
+2018-03-16 12:04:25 INFO  RelationExtractionViaSparql:167 - Annotations founded in Section = 40159
+2018-03-16 12:04:25 INFO  RelationExtractionViaSparql:79 - Processing file: Nationality
+2018-03-16 12:04:28 INFO  RelationExtractionViaSparql:89 - Beging Process
+2018-03-16 12:11:12 INFO  RelationExtractionViaSparql:159 - TOTAL TIME = 6 min, 46 sec
+2018-03-16 12:11:12 INFO  RelationExtractionViaSparql:160 - End Abstract
+2018-03-16 12:11:12 INFO  RelationExtractionViaSparql:163 - Files processed = 49451
+2018-03-16 12:11:12 INFO  RelationExtractionViaSparql:164 - Files with no annotations = 44949
+2018-03-16 12:11:12 INFO  RelationExtractionViaSparql:165 - File does not exist = 508
+2018-03-16 12:11:12 INFO  RelationExtractionViaSparql:166 - Annotations founded in Abstract = 29390
+2018-03-16 12:11:12 INFO  RelationExtractionViaSparql:167 - Annotations founded in Section = 44932
+2018-03-16 12:11:12 INFO  RelationExtractionViaSparql:79 - Processing file: SchoolAttended
+2018-03-16 12:11:20 INFO  RelationExtractionViaSparql:89 - Beging Process
+2018-03-16 12:16:26 INFO  RelationExtractionViaSparql:159 - TOTAL TIME = 5 min, 13 sec
+2018-03-16 12:16:26 INFO  RelationExtractionViaSparql:160 - End Abstract
+2018-03-16 12:16:26 INFO  RelationExtractionViaSparql:163 - Files processed = 56823
+2018-03-16 12:16:26 INFO  RelationExtractionViaSparql:164 - Files with no annotations = 47556
+2018-03-16 12:16:26 INFO  RelationExtractionViaSparql:165 - File does not exist = 529
+2018-03-16 12:16:26 INFO  RelationExtractionViaSparql:166 - Annotations founded in Abstract = 31126
+2018-03-16 12:16:26 INFO  RelationExtractionViaSparql:167 - Annotations founded in Section = 51846
+2018-03-16 12:16:26 INFO  RelationExtractionViaSparql:79 - Processing file: Siblings
+2018-03-16 12:16:28 INFO  RelationExtractionViaSparql:89 - Beging Process
+2018-03-16 12:23:08 INFO  RelationExtractionViaSparql:159 - TOTAL TIME = 6 min, 42 sec
+2018-03-16 12:23:08 INFO  RelationExtractionViaSparql:160 - End Abstract
+2018-03-16 12:23:08 INFO  RelationExtractionViaSparql:163 - Files processed = 62425
+2018-03-16 12:23:08 INFO  RelationExtractionViaSparql:164 - Files with no annotations = 51921
+2018-03-16 12:23:08 INFO  RelationExtractionViaSparql:165 - File does not exist = 562
+2018-03-16 12:23:08 INFO  RelationExtractionViaSparql:166 - Annotations founded in Abstract = 32889
+2018-03-16 12:23:08 INFO  RelationExtractionViaSparql:167 - Annotations founded in Section = 57352

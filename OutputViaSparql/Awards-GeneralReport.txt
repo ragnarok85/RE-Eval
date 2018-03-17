@@ -1,5 +1,5 @@
 GeneralReport 
- ProcessingTime	TOTAL TIME = 6 min, 59 sec
+ ProcessingTime	TOTAL TIME = 5 min, 44 sec
 targetRelation	Awards
 sparqlQuery	select ?s ?o (<http://dbpedia.org/ontology/award> as ?p) where { ?s a <http://dbpedia.org/ontology/Person> . ?s <http://dbpedia.org/ontology/award> ?o . ?o a <http://dbpedia.org/ontology/Award>. } 
 DBpediaResults	10000

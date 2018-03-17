@@ -61,8 +61,8 @@ public class RelationExtractionViaSparql {
 		GeneralReport gr = new GeneralReport();
 		TextSearcher ts = new TextSearcher();
 		for(File file : sparqlFiles) {
-			if(!file.getName().contains("Spouse"))
-				continue;
+//			if(!file.getName().contains("Spouse"))
+//				continue;
 			String query = re.readSparqlQueries(file);
 			logger.info(query);
 			mapSparqlQueries.put(file.getName().replace(".rq", ""),query);

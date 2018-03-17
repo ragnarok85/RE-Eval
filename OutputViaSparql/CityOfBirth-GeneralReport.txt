@@ -1,5 +1,5 @@
 GeneralReport 
- ProcessingTime	TOTAL TIME = 6 min, 43 sec
+ ProcessingTime	TOTAL TIME = 6 min, 54 sec
 targetRelation	CityOfBirth
 sparqlQuery	select ?s ?o (<http://dbpedia.org/ontology/birthPlace> as ?p) where { ?s a <http://dbpedia.org/ontology/Person> . ?s <http://dbpedia.org/ontology/birthPlace> ?o . ?o a <http://dbpedia.org/ontology/City> . } 
 DBpediaResults	10000
