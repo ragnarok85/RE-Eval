@@ -84,8 +84,8 @@ public class RelationExtraction {
 		listProcessed.addAll(re.processedFiles(outputFiles));
 		
 		for(File file : sparqlFiles) {
-			if(!file.getName().contains("PartyAffiliation"))
-				continue;
+//			if(!file.getName().contains("PartyAffiliation"))
+//				continue;
 //			if(listProcessed.contains(file.getName().replace(".rq", ""))) {
 //				System.out.println("File " + file.getName().replace(".rq", "") + " was already processed.");
 //				continue;
@@ -122,20 +122,20 @@ public class RelationExtraction {
 			re.writeTime(outputFolder, "AbstractTime.csv", entry.getKey(), timeElapsed);
 			logger.info("End Abstract");
 
-			logger.info("Begin Section");
-			initialTime = System.currentTimeMillis();
-			if(!notInAbstractList.isEmpty()) {
-				notInSectionList.addAll(re.lookRelationsInSection(notInAbstractList, nifPath, 
-					entry.getKey(), outputSections));
-				re.writeNotInAbstractRelations(outputNotInSection, entry.getKey(), 
-						notInSectionList);
-			}
-			endTime = System.currentTimeMillis() - initialTime;
-			timeElapsed = String.format("TOTAL TIME = %d min, %d sec", TimeUnit.MILLISECONDS.toMinutes(endTime),
-	    			TimeUnit.MILLISECONDS.toSeconds(endTime) - 
-	    		    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(endTime)));
-			re.writeTime(outputFolder, "SectionTime.csv", entry.getKey(), timeElapsed);
-			logger.info("End Section");
+//			logger.info("Begin Section");
+//			initialTime = System.currentTimeMillis();
+//			if(!notInAbstractList.isEmpty()) {
+//				notInSectionList.addAll(re.lookRelationsInSection(notInAbstractList, nifPath, 
+//					entry.getKey(), outputSections));
+//				re.writeNotInAbstractRelations(outputNotInSection, entry.getKey(), 
+//						notInSectionList);
+//			}
+//			endTime = System.currentTimeMillis() - initialTime;
+//			timeElapsed = String.format("TOTAL TIME = %d min, %d sec", TimeUnit.MILLISECONDS.toMinutes(endTime),
+//	    			TimeUnit.MILLISECONDS.toSeconds(endTime) - 
+//	    		    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(endTime)));
+//			re.writeTime(outputFolder, "SectionTime.csv", entry.getKey(), timeElapsed);
+//			logger.info("End Section");
 		}
 		
 		for(REStats stat : listStats) {
@@ -221,6 +221,16 @@ public class RelationExtraction {
 			are.start();
 			//System.out.println("threads running: " + Thread.activeCount());
 			System.out.println("Relation processing/processed = " + counterRels++ +"/" + listRelations.size());
+			if(listThreads.size() > 100) {
+				out:while(true) {
+					for(Thread e : listThreads) {
+						if(e.isAlive())
+							continue out;
+					}
+					break;
+				}
+				listThreads.clear();
+			}
 		}
 		for(Thread t : listThreads) {
 			t.join();
@@ -230,10 +240,13 @@ public class RelationExtraction {
 		String[] counterApproach = countApproachFromReport(listReport).split("--");//sbj-obj--pronoun-obj
 		String[] counterExtraction = countExtractionFromReport(listReport).split("--");//in sentence -- in paragraph
 		int counterBlank = countBlankSentences(listReport);
-		writeReport(outputFolder,fileName,listReport, counterEquals, counterContains, notInList.size(),
+//		writeReport(outputFolder,fileName,listReport, counterEquals, counterContains, notInList.size(),
+//				counterApproach[0], counterApproach[1], counterExtraction[0], counterExtraction[1],
+//				counterBlank, listArticlesNotFound);
+		//TODO
+		writeMilanReport(outputFolder,fileName,listReport, counterEquals, counterContains, notInList.size(),
 				counterApproach[0], counterApproach[1], counterExtraction[0], counterExtraction[1],
 				counterBlank, listArticlesNotFound);
-		
 		
 		logger.info("number of equals: " + counterEquals);
 		logger.info("number of contains: " + counterContains);
@@ -510,6 +523,26 @@ public class RelationExtraction {
 					+ "Context\n");
 			for(Report r : listReport) {
 				pw.write(r.printReport()+"\n");
+			}
+			pw.close();
+		}catch(IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void writeMilanReport(File outputFolder,String fileName,List<Report> listReport, int numEquals, 
+			int numContains, int notInAbstractList, String sbjObj, String pronounObj,
+			String sentence, String paragraph, int counterBlank, List<String> listArticlesNotFound) {
+		try(PrintWriter pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(outputFolder+"/"+fileName+"-report.csv"),StandardCharsets.UTF_8))) {
+			pw.write("id\t"
+					+ "text\t"
+					+ "property\t"
+					+ "subject\t"
+					+ "object\n");
+			int id = 0;
+			for(Report r : listReport) {
+				//TODO
+				pw.write(id++ + "\t" + r.printMilanReport()+"\n");
 			}
 			pw.close();
 		}catch(IOException e) {

@@ -2,4 +2,4 @@ select ?s ?o (<http://dbpedia.org/ontology/occupation> as ?p) where {
 ?s a <http://dbpedia.org/ontology/Person> .
 ?s <http://dbpedia.org/ontology/occupation> ?ot .
 ?ot a <http://dbpedia.org/ontology/PersonFunction> .
-?s <http://purl.org/linguistics/gold/hypernym> ?o .}
+?s <http://purl.org/linguistics/gold/hypernym> ?o .} LIMIT 2000

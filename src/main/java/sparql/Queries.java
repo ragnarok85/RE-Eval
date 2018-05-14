@@ -32,9 +32,9 @@ public enum Queries {
 			+ " ?lsuper <http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#superString> ?psuper. "
 			+ " ?psuper <http://www.w3.org/2004/02/skos/core#notation> ?notation. "), //The query must be completed in 
 								//the code section with "FILTER(str(?notation)="+VAR+") }" "
-	SECTIONODERBYINDEX("SELECT ?bi ?ei ?section ? paragraph WHERE { "
+	SECTIONODERBYINDEX("SELECT ?bi ?ei ?section ?paragraph WHERE { "
 			+ " ?section <http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#hasParagraph> ?paragraph; "
-			+ " 		 <http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#beginIndex> ?bi. "
+			+ " 		 <http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#beginIndex> ?bi; "
 			+ "			 <http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#endIndex> ?ei. "
 			+ " } ORDER BY ?bi "),
 	PARAGRAOHODERBYINDEX("SELECT ?bi ?ei ?paragraph WHERE { "

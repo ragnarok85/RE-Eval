@@ -69,51 +69,54 @@ public class TextSearcher {
 			String selectSentences = detectInSentence(listSentences, sbjAnchor, object);
 			approach = "Sbj-Obj";
 			extraction = "In Sentence";
-			if(selectSentences.length() == 0) {
-//				System.out.println("Detecting pronoun (he,she,his,her) in sentence: ");
-				approach = "Pronoun-Obj";
-				extraction = "In Sentence";
-				selectSentences = detectPronounInSentence(listSentences, objAnchor, sbjAnchor);
-			}
-			
-			if(selectSentences.length() == 0) {
-//				System.out.println("Detecting relation using the whole paragraph. ");
-				approach = "Sbj-Obj";
-				extraction = "In Paragraph";
-				selectSentences = detectInParagraph(context, object, sbjAnchor);
-			}
+//			if(selectSentences.length() == 0) {
+////				System.out.println("Detecting pronoun (he,she,his,her) in sentence: ");
+//				approach = "Pronoun-Obj";
+//				extraction = "In Sentence";
+//				selectSentences = detectPronounInSentence(listSentences, objAnchor, sbjAnchor);
+//			}
+//			
+//			if(selectSentences.length() == 0) {
+////				System.out.println("Detecting relation using the whole paragraph. ");
+//				approach = "Sbj-Obj";
+//				extraction = "In Paragraph";
+//				selectSentences = detectInParagraph(context, object, sbjAnchor);
+//			}
 			
 			if(selectSentences.length() == 0) {
 				report.setBlankSentence("X");
 			}
 			
-			report.setContext(sectionText);
-			report.setSentence(selectSentences);
-			
-			report.setExtraction(extraction);
-			report.setApproach(approach);
-			report.setSectionNumber(notation);
-			report.setSectionTitle(secTitle);
-			
-			if(ann.getAnchor().equalsIgnoreCase(objAnchor)) {
-//				System.out.println("Section Index: " + Integer.parseInt(sectionIndexes[0]) + "---" +sectionEndIndex);
-//				System.out.println("Paragraph Index: " + Integer.parseInt(paragraphIndexes[0]) + "---" +paragraphEndIndex);
-//				System.out.println("Equal = " + ann.getAnchor());
-//				System.out.println("Sentence = " + selectSentences);
-				report.setKindOfMatch("Equal");
-				report.setAnchor(ann.getAnchor());
-				counterEquals++;
-				listReport.add(report);
-			}else if(ann.getAnchor().contains(objAnchor)) {
-//				System.out.println("Section Index: " + Integer.parseInt(sectionIndexes[0]) + "---" +sectionEndIndex);
-//				System.out.println("Paragraph Index: " + Integer.parseInt(paragraphIndexes[0]) + "---" +paragraphEndIndex);
-//				System.out.println("Contains = " + ann.getAnchor());
-//				System.out.println("Sentence = " + selectSentences);
-				report.setKindOfMatch("Contains");
-				report.setAnchor(ann.getAnchor());
-				counterContains++;
-				listReport.add(report);
+			if(selectSentences.length() > 0) {
+				report.setContext(sectionText);
+				report.setSentence(selectSentences);
+				
+				report.setExtraction(extraction);
+				report.setApproach(approach);
+				report.setSectionNumber(notation);
+				report.setSectionTitle(secTitle);
+				
+				if(ann.getAnchor().equalsIgnoreCase(objAnchor)) {
+//					System.out.println("Section Index: " + Integer.parseInt(sectionIndexes[0]) + "---" +sectionEndIndex);
+//					System.out.println("Paragraph Index: " + Integer.parseInt(paragraphIndexes[0]) + "---" +paragraphEndIndex);
+//					System.out.println("Equal = " + ann.getAnchor());
+//					System.out.println("Sentence = " + selectSentences);
+					report.setKindOfMatch("Equal");
+					report.setAnchor(ann.getAnchor());
+					counterEquals++;
+					listReport.add(report);
+				}else if(ann.getAnchor().contains(objAnchor)) {
+//					System.out.println("Section Index: " + Integer.parseInt(sectionIndexes[0]) + "---" +sectionEndIndex);
+//					System.out.println("Paragraph Index: " + Integer.parseInt(paragraphIndexes[0]) + "---" +paragraphEndIndex);
+//					System.out.println("Contains = " + ann.getAnchor());
+//					System.out.println("Sentence = " + selectSentences);
+					report.setKindOfMatch("Contains");
+					report.setAnchor(ann.getAnchor());
+					counterContains++;
+					listReport.add(report);
+				}
 			}
+			
 		}
 //		System.out.println(counterEquals+"-"+counterContains);
 		return counterEquals+"-"+counterContains;

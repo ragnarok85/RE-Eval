@@ -30,6 +30,13 @@ public class Report {
 														+ this.context + "\t"; 
 	}
 	
+	public String printMilanReport() {
+		return  this.sentence + "\t"
+					+ this.relation +"\t"
+						+ this.subject + "\t"
+							+ this.object;
+	}
+	
 	public String getSubject() {
 		return subject;
 	}
