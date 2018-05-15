@@ -458,7 +458,8 @@ public class RelationExtraction {
 	
 	public String md5(String name) throws NoSuchAlgorithmException {
 		String md5 = "";
-		String base = "<http://nif.dbpedia.org/wiki/en/"+name;
+		//String base = "<http://nif.dbpedia.org/wiki/en/"+name;
+		String base = name;
 		byte[] fileName = base.getBytes();
 		MessageDigest md = MessageDigest.getInstance("MD5");
 		md5 = toHexString(md.digest(fileName));

@@ -204,11 +204,12 @@ public class TextSearcher {
 				if(oIndex > snt.length())
 					oIndex = snt.length();
 //				System.out.println(sIndex + " -- " + oIndex + "--" + snt.length());
-				if(sIndex < oIndex ) {
-					sentence = snt.substring(sIndex, oIndex);
+				//creating a substring
+//				if(sIndex < oIndex ) {
+//					sentence = snt.substring(sIndex, oIndex);
 //					System.out.println("Sentence:\n"+sentence);
 //					System.out.println();
-				}
+//				}
 			}
 //			System.out.println("\n\n");
 		}

@@ -3,7 +3,7 @@ package sparql;
 public enum Queries {
 
 	CONTEXT("SELECT ?context WHERE { "
-			+ " ?s <http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#isString> ?context "
+			+ " ?s <http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#isString> ?context. "
 			+ " }"),
 	ABSTRACTLINKS("SELECT * WHERE {"
 			+ " ?s a ?type."
