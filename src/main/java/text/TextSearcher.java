@@ -88,6 +88,7 @@ public class TextSearcher {
 			}
 			
 			if(selectSentences.length() > 0) {
+			
 				report.setContext(sectionText);
 				report.setSentence(selectSentences);
 				
@@ -191,7 +192,7 @@ public class TextSearcher {
 //		System.out.println("Subject = " + sbjAnchor);
 //		System.out.println("Object = " + objAnchor);
 		String sentence = "";
-		int counter = 0;
+//		int counter = 0;
 		for(String snt : listSentences) {
 //			System.out.println(counter++ + ".- sentence: \n" + snt);
 //			System.out.println("Paragraph = " + snt);
@@ -205,11 +206,12 @@ public class TextSearcher {
 					oIndex = snt.length();
 //				System.out.println(sIndex + " -- " + oIndex + "--" + snt.length());
 				//creating a substring
-//				if(sIndex < oIndex ) {
+				if(sIndex < oIndex ) {
 //					sentence = snt.substring(sIndex, oIndex);
+					sentence = snt;
 //					System.out.println("Sentence:\n"+sentence);
 //					System.out.println();
-//				}
+				}
 			}
 //			System.out.println("\n\n");
 		}

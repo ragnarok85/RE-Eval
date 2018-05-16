@@ -1,16 +1,14 @@
 package sparql;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import objects.Annotation;
-import objects.DBpediaRelation;
-import objects.Paragraph;
-import objects.REStats;
-import objects.Section;
 
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryExecution;
@@ -20,6 +18,12 @@ import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.Model;
 import org.apache.log4j.Logger;
+
+import objects.Annotation;
+import objects.DBpediaRelation;
+import objects.Paragraph;
+import objects.REStats;
+import objects.Section;
 
 public class SparqlQueries {
 	
@@ -162,10 +166,14 @@ public class SparqlQueries {
 		return listDBRelations;
 	}
 	
-	public String queryContext(Model model) {
+	
+	
+	public String queryContext(Model model) throws FileNotFoundException {
 		String context = "";
 		String queryString = Queries.CONTEXT.query();
 		Query query = QueryFactory.create(queryString);
+		PrintWriter pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream("test.ttl")));
+		model.write(pw,"NTRIPLES");
 		try(QueryExecution qexec = QueryExecutionFactory.create(query, model)){
 			ResultSet result = qexec.execSelect();
 			while(result.hasNext()) {

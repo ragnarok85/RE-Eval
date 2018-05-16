@@ -1,5 +1,6 @@
 package reeval;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -21,15 +22,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-import objects.Annotation;
-import objects.Article;
-import objects.DBpediaRelation;
-import objects.Paragraph;
-import objects.REStats;
-import reports.Report;
-import objects.Section;
-import opennlp.tools.util.InvalidFormatException;
-
+import org.apache.commons.compress.compressors.CompressorException;
+import org.apache.commons.compress.compressors.CompressorInputStream;
+import org.apache.commons.compress.compressors.CompressorStreamFactory;
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
@@ -38,6 +33,14 @@ import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.SKOS;
 import org.apache.log4j.Logger;
 
+import objects.Annotation;
+import objects.Article;
+import objects.DBpediaRelation;
+import objects.Paragraph;
+import objects.REStats;
+import objects.Section;
+import opennlp.tools.util.InvalidFormatException;
+import reports.Report;
 import sparql.SparqlQueries;
 
 public class RelationExtraction {
@@ -62,7 +65,7 @@ public class RelationExtraction {
 	
 	private SparqlQueries sq = new SparqlQueries();
 	
-	public static void main(String[] args) throws NoSuchAlgorithmException, InvalidFormatException, IOException, InterruptedException {
+	public static void main(String[] args) throws NoSuchAlgorithmException, InvalidFormatException, IOException, InterruptedException, CompressorException {
 		File sparqlPath = new File(args[0]);
 		File[] sparqlFiles = sparqlPath.listFiles();
 		File outputFolder = new File(args[2]);
@@ -84,8 +87,8 @@ public class RelationExtraction {
 		listProcessed.addAll(re.processedFiles(outputFiles));
 		
 		for(File file : sparqlFiles) {
-//			if(!file.getName().contains("PartyAffiliation"))
-//				continue;
+			if(!file.getName().contains("PartyAffiliation"))
+				continue;
 //			if(listProcessed.contains(file.getName().replace(".rq", ""))) {
 //				System.out.println("File " + file.getName().replace(".rq", "") + " was already processed.");
 //				continue;
@@ -150,7 +153,7 @@ public class RelationExtraction {
 	 */
 	//look for the nif file of the subject resource
 	public void lookRelationsInAbstract(List<DBpediaRelation> listRelations, String nifPath, 
-			String fileName, File outputFolder) throws NoSuchAlgorithmException, IOException, InterruptedException {
+			String fileName, File outputFolder) throws NoSuchAlgorithmException, IOException, InterruptedException, CompressorException {
 		
 		listReport.clear();
 		counterEquals = 0;
@@ -187,12 +190,15 @@ public class RelationExtraction {
 			// QUERIES
 			List<Annotation> listLinkAnnotations = new ArrayList<Annotation>();
 			BZip2CompressorInputStream inputStream = createBz2Reader(filePath);
+			
 			if (inputStream == null) {
 				logger.info("File \"" + filePath.getAbsolutePath() + "\"(" + sbj + ") does not exist");
 				listArticlesNotFound.add(sbj+"--"+filePath.getName());
 				continue;
 			}
 			
+			
+
 			Model model = createJenaModel(inputStream);
 			
 			//TODO query for context
@@ -348,7 +354,7 @@ public class RelationExtraction {
 	
 	public Model createJenaModel(BZip2CompressorInputStream filePath) {
 		Model model = ModelFactory.createDefaultModel();
-		model.read(filePath,null,"TURTLE");
+		model.read(filePath,null,"NTRIPLES");
 		//setPrefixes(model);
 		return model;
 		
