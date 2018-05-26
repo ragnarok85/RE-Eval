@@ -60,6 +60,23 @@ public class TextPreprocessor {
 		return sentences;
 	}
 	
+	public String selectSentence(String[] sentences, int beginParagraph, int endIndex) {
+		String sentence = "";
+		int length = beginParagraph;
+//		System.out.println("beginParagraph = " + beginParagraph);
+//		System.out.println("endIndex = " + endIndex);
+		for(int i = 0; i < sentences.length ; i++) {
+//			System.out.println("endIndex (" + endIndex+") vs sentence.length (" + (sentences[i].length()+length)+")");
+			if(endIndex <= (sentences[i].length()+length)) {
+				sentence = sentences[i];
+//				System.out.println("sentence = " + sentence);
+				break;
+			}
+			length += sentences[i].length();
+		}
+		return sentence;
+	}
+	
 	public String[] tokenExtraction(String sbjAnchor)
 			throws InvalidFormatException, IOException {
 

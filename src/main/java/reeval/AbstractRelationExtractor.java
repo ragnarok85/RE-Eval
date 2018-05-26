@@ -19,6 +19,7 @@ import org.apache.log4j.Logger;
 
 import objects.Annotation;
 import objects.DBpediaRelation;
+import objects.DBpediaType;
 import sparql.SparqlQueries;
 import text.TextSearcher;
 
@@ -29,12 +30,14 @@ public class AbstractRelationExtractor extends Thread{
 
 	private String sbjAnchor;
 	private String objAnchor;
+	private String objUri;
 	private String numSection;
 	private String titleSection;
 	
 	private List<Annotation> listLinkAnnotations = new ArrayList<Annotation>();
 	
 	private DBpediaRelation relation;
+	private DBpediaType type;
 	private Model model;
 	private TextSearcher ts = new TextSearcher();
 	private SparqlQueries sq = new SparqlQueries();
@@ -42,10 +45,11 @@ public class AbstractRelationExtractor extends Thread{
 	public AbstractRelationExtractor() {
 	}
 	
-	public AbstractRelationExtractor(String sbjAnchor, String objAnchor, String numSection,
+	public AbstractRelationExtractor(String sbjAnchor, String objAnchor, String objUri, String numSection,
 			String titleSection, Model model, DBpediaRelation relation, List<Annotation> listLinkAnnotations) {
 		this.sbjAnchor = sbjAnchor;
 		this.objAnchor = objAnchor;
+		this.objUri = objUri;
 		this.numSection = numSection;
 		this.titleSection = titleSection;
 		this.model = model;
@@ -53,6 +57,18 @@ public class AbstractRelationExtractor extends Thread{
 		this.listLinkAnnotations.addAll(listLinkAnnotations);
 		
 	}
+	
+//	public AbstractRelationExtractor(String sbjAnchor, String objAnchor, String objUri, String numSection,
+//			String titleSection, Model model, DBpediaType relation, List<Annotation> listLinkAnnotations) {
+//		this.sbjAnchor = sbjAnchor;
+//		this.objAnchor = objAnchor;
+//		this.numSection = numSection;
+//		this.titleSection = titleSection;
+//		this.model = model;
+//		this.type = relation;
+//		this.listLinkAnnotations.addAll(listLinkAnnotations);
+//		
+//	}
 	
 	@Override
 	public void run() {
@@ -63,7 +79,7 @@ public class AbstractRelationExtractor extends Thread{
 			try {
 //				System.out.println("NumSection = " + numSection + "\nTitleSection = " + titleSection);
 				counters = ts.detectRelationsInSentence(listLinkAnnotations,listReport,model,relation,
-						sbjAnchor,objAnchor,numSection,titleSection);
+						sbjAnchor,objAnchor,objUri, numSection,titleSection);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

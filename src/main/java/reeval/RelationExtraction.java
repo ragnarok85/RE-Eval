@@ -89,10 +89,10 @@ public class RelationExtraction {
 		for(File file : sparqlFiles) {
 			if(!file.getName().contains("PartyAffiliation"))
 				continue;
-//			if(listProcessed.contains(file.getName().replace(".rq", ""))) {
-//				System.out.println("File " + file.getName().replace(".rq", "") + " was already processed.");
-//				continue;
-//			}
+			if(listProcessed.contains(file.getName().replace(".rq", ""))) {
+				System.out.println("File " + file.getName().replace(".rq", "") + " was already processed.");
+				continue;
+			}
 			String query = re.readSparqlQueries(file);
 			logger.info(query);
 			mapSparqlQueries.put(file.getName().replace(".rq", ""),query);
@@ -122,7 +122,7 @@ public class RelationExtraction {
 			timeElapsed = String.format("TOTAL TIME = %d min, %d sec", TimeUnit.MILLISECONDS.toMinutes(endTime),
 	    			TimeUnit.MILLISECONDS.toSeconds(endTime) - 
 	    		    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(endTime)));
-			re.writeTime(outputFolder, "AbstractTime.csv", entry.getKey(), timeElapsed);
+			re.writeTime(outputFolder, "AbstractTime.tsv", entry.getKey(), timeElapsed);
 			logger.info("End Abstract");
 
 //			logger.info("Begin Section");
@@ -180,6 +180,7 @@ public class RelationExtraction {
 			String[] objSplit = rel.getObjURI().split("/");
 			String objAnchor = objSplit[objSplit.length-1].replaceAll("_", " ");
 
+			String objUri = rel.getObjURI();
 			//TODO Create an Article object with name attribute as the file name
 			
 			// System.out.println(sbjAnchor + "-" + objAnchor);
@@ -221,7 +222,7 @@ public class RelationExtraction {
 			
 			//TODO filter annotations to those which contains or are equal to the object
 			
-			AbstractRelationExtractor are = new AbstractRelationExtractor(sbjAnchor,objAnchor,"0","Abstract",
+			AbstractRelationExtractor are = new AbstractRelationExtractor(sbjAnchor,objAnchor, objUri,"0","Abstract",
 					model, rel, listLinkAnnotations);
 			listThreads.add(are);
 			are.start();
@@ -288,6 +289,8 @@ public class RelationExtraction {
 			
 			String[] objSplit = rel.getObjURI().split("/");
 			String objAnchor = objSplit[objSplit.length-1].replaceAll("_", " ");
+			
+			String objUri = rel.getObjURI();
 
 			Map<String,String> mapSections = new HashMap<String,String>();
 			
@@ -318,7 +321,7 @@ public class RelationExtraction {
 				//System.out.println("processing section number = " + entry.getKey() + " (" + entry.getValue() + ")");
 				if(listLinkAnnotations.size() == 0)
 					continue;
-				AbstractRelationExtractor are = new AbstractRelationExtractor(sbjAnchor,objAnchor,entry.getKey(),
+				AbstractRelationExtractor are = new AbstractRelationExtractor(sbjAnchor,objAnchor, objUri,entry.getKey(),
 						entry.getValue(), model, rel, listLinkAnnotations);
 				listThreads.add(are);
 				are.start(); 
@@ -442,7 +445,7 @@ public class RelationExtraction {
 	public List<String> processedFiles(File[] listFiles){
 		List<String> listProcessed = new ArrayList<String>();
 		for(File f : listFiles) {
-			if(f.getName().endsWith(".csv"))
+			if(f.getName().endsWith(".tsv"))
 				listProcessed.add(f.getName().split("-")[0]);
 		}
 		return listProcessed;
@@ -500,7 +503,7 @@ public class RelationExtraction {
 	public void writeReport(File outputFolder,String fileName,List<Report> listReport, int numEquals, 
 			int numContains, int notInAbstractList, String sbjObj, String pronounObj,
 			String sentence, String paragraph, int counterBlank, List<String> listArticlesNotFound) {
-		try(PrintWriter pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(outputFolder+"/"+fileName+"-report.csv"),StandardCharsets.UTF_8))) {
+		try(PrintWriter pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(outputFolder+"/"+fileName+"-report.tsv"),StandardCharsets.UTF_8))) {
 			pw.write("number of equals =\t" + numEquals + "\n");
 			pw.write("number of contains =\t" + numContains + "\n");
 			pw.write("notInAbstractList =\t" + notInAbstractList + "\n");
@@ -540,7 +543,7 @@ public class RelationExtraction {
 	public void writeMilanReport(File outputFolder,String fileName,List<Report> listReport, int numEquals, 
 			int numContains, int notInAbstractList, String sbjObj, String pronounObj,
 			String sentence, String paragraph, int counterBlank, List<String> listArticlesNotFound) {
-		try(PrintWriter pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(outputFolder+"/"+fileName+"-report.csv"),StandardCharsets.UTF_8))) {
+		try(PrintWriter pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(outputFolder+"/"+fileName+"-report.tsv"),StandardCharsets.UTF_8))) {
 			pw.write("id\t"
 					+ "text\t"
 					+ "property\t"
@@ -549,7 +552,7 @@ public class RelationExtraction {
 			int id = 0;
 			for(Report r : listReport) {
 				//TODO
-				pw.write(id++ + "\t" + r.printMilanReport()+"\n");
+				pw.write(id++ + "\t" + r.printMilanReport().replace("\"","\\\"")+"\n");
 			}
 			pw.close();
 		}catch(IOException e) {

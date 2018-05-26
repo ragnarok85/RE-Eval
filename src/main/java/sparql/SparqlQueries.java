@@ -21,6 +21,7 @@ import org.apache.log4j.Logger;
 
 import objects.Annotation;
 import objects.DBpediaRelation;
+import objects.DBpediaType;
 import objects.Paragraph;
 import objects.REStats;
 import objects.Section;
@@ -50,6 +51,9 @@ public class SparqlQueries {
 				annotation.setParagraphURI(sol.getResource("?lsuper").getURI()); //linkSuperString --> Paragraph
 				annotation.setSectionURI(sol.getResource("?psuper").getURI());//paragraphSuperString --> Section
 				annotation.setNotation(sol.getLiteral("?notation").getString());
+				annotation.setTaIdentRef(sol.getResource("?taIdentRef").getURI().replace("http://nif.dbpedia.org/wiki/en/", "http://dbpedia.org/resource/"));
+				annotation.setBeginIndex(sol.getLiteral("?beginIndex").getInt());
+				annotation.setEndIndex(sol.getLiteral("?endIndex").getInt());
 				listAnnotations.add(annotation);
 			}
 		}
@@ -129,6 +133,30 @@ public class SparqlQueries {
 	/*
 	 * SPARQL DBpedia
 	 */
+	public List<DBpediaType> queryDBpediaType(String queryString, String targetType) throws UnsupportedEncodingException {
+		List<DBpediaType> listDBRelations = new ArrayList<DBpediaType>();
+		
+		Query query = QueryFactory.create(queryString);
+		
+		try(QueryExecution qexec = QueryExecutionFactory.sparqlService(service, query)){
+			ResultSet result = qexec.execSelect();
+			int counterResults = 0;
+			while(result.hasNext()) {
+				DBpediaType type = new DBpediaType(targetType);
+				
+				QuerySolution qs = result.next();
+				
+				String s = new String(qs.getResource("?s").getURI().getBytes(),"UTF-8");
+				String o = new String(qs.getResource("?o").getURI().getBytes(),"UTF-8");
+				
+				type.setSubject(s);
+				type.setObject(o);
+				
+				listDBRelations.add(type);
+			}
+		}
+		return listDBRelations;
+	}
 	
 	public List<DBpediaRelation> queryDBpediaRelations(String queryString, String targetRelation, List<REStats> listStats) throws UnsupportedEncodingException {
 		List<DBpediaRelation> listDBRelations = new ArrayList<DBpediaRelation>();
@@ -178,7 +206,7 @@ public class SparqlQueries {
 			ResultSet result = qexec.execSelect();
 			while(result.hasNext()) {
 				QuerySolution sol = result.next();
-				context = sol.getLiteral("?context").getString();
+				context = sol.getLiteral("?context").getString().replace("\\\"", "\"");
 			}
 		}
 		return context;

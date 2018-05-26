@@ -1,4 +1,4 @@
 select ?s ?o (<http://dbpedia.org/ontology/spouse> as ?p) where {
 ?s a <http://dbpedia.org/ontology/Person> .
 ?s <http://dbpedia.org/ontology/spouse> ?o .
-?o a <http://dbpedia.org/ontology/Person> . } LIMIT 2000
+?o a <http://dbpedia.org/ontology/Person> . } LIMIT 3000

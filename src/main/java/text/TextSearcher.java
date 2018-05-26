@@ -24,7 +24,7 @@ public class TextSearcher {
 	}
 	
 	public String detectRelationsInSentence(List<Annotation> listLinkAnnotations, List<Report> listReport,
-			Model model, DBpediaRelation rel, String sbjAnchor, String objAnchor, String notation, 
+			Model model, DBpediaRelation rel, String sbjAnchor, String objAnchor, String objUri, String notation, 
 			String secTitle) throws IOException {
 		int counterEquals = 0; 
 		int counterContains = 0;
@@ -34,7 +34,11 @@ public class TextSearcher {
 		for(Annotation ann : listLinkAnnotations) {
 //			if(!ann.getNotation().equals(notation))
 //				continue;
-			//ann.printAnnotation();
+//			ann.printAnnotation();
+//			logger.info("Comparing object Uri (" + objUri + ") with annotation Uri (" + ann.getTaIdentRef());
+			if(!ann.getTaIdentRef().equals(objUri))
+				continue;
+			
 			String[] listSentences;
 			String object = ann.getAnchor();
 			
@@ -45,6 +49,7 @@ public class TextSearcher {
 			
 			String[] paragraphIndexes = extractIndexes(ann.getParagraphURI()).split(","); //begin,end
 			String[] sectionIndexes = extractIndexes(ann.getSectionURI()).split(",");
+			int paragraphBeginIndex = Integer.parseInt(paragraphIndexes[0]);
 			int paragraphEndIndex = Integer.parseInt(paragraphIndexes[1]);
 			int sectionEndIndex = Integer.parseInt(sectionIndexes[1]);
 			
@@ -56,17 +61,23 @@ public class TextSearcher {
 				logger.info("Index inconsistency = " + rel.getSbjURI());
 				sectionEndIndex = context.length();
 			}
+			if(paragraphEndIndex < ann.getEndIndex())
+				continue;
 			
 			String sectionText = context.substring(Integer.parseInt(sectionIndexes[0]),sectionEndIndex);
 			String paragraph = context.substring(Integer.parseInt(paragraphIndexes[0]), paragraphEndIndex); 
 			listSentences = tp.sentenceDetector(paragraph);
+			String sentence = tp.selectSentence(listSentences, paragraphBeginIndex, ann.getEndIndex());
+			if(sentence.isEmpty())
+				sentence = "NO_SENTENCE_SELECTED_:::" + paragraph + "----" + paragraphBeginIndex + "-"+paragraphBeginIndex+" ----EndIndex----" + ann.getEndIndex() + " ---- Mention ---" + ann.getAnchor();
 			rel.setSbjAbstract(sectionText);
 			
 //			System.out.println("Detect sentence for " + ann.getAnchor() + " and " + sbjAnchor);
 			
 //			System.out.println("detecting subject ("+sbjAnchor+") in sentence: ");
 			
-			String selectSentences = detectInSentence(listSentences, sbjAnchor, object);
+//			String selectSentences = detectInSentence(listSentences, sbjAnchor, object);
+
 			approach = "Sbj-Obj";
 			extraction = "In Sentence";
 //			if(selectSentences.length() == 0) {
@@ -83,14 +94,15 @@ public class TextSearcher {
 //				selectSentences = detectInParagraph(context, object, sbjAnchor);
 //			}
 			
-			if(selectSentences.length() == 0) {
-				report.setBlankSentence("X");
-			}
+//			if(selectSentences.length() == 0) {
+//				report.setBlankSentence("X");
+//			}
 			
-			if(selectSentences.length() > 0) {
+//			if(selectSentences.length() > 0) {
 			
 				report.setContext(sectionText);
-				report.setSentence(selectSentences);
+//				report.setSentence(selectSentences);
+				report.setSentence(sentence);
 				
 				report.setExtraction(extraction);
 				report.setApproach(approach);
@@ -118,7 +130,7 @@ public class TextSearcher {
 				}
 			}
 			
-		}
+//		}
 //		System.out.println(counterEquals+"-"+counterContains);
 		return counterEquals+"-"+counterContains;
 	}
@@ -182,41 +194,41 @@ public class TextSearcher {
 		return sentence;
 	}
 	
-	public String detectInSentence(String[] listSentences, String sbjAnchor, 
-			String objAnchor) throws InvalidFormatException, IOException {
-		/*
-		 * A sentence is considered only if contains the subject and object
-		 * Subject must match one of their elements
-		 * Object must match complete to avoid inconsistencies
-		 */
-//		System.out.println("Subject = " + sbjAnchor);
-//		System.out.println("Object = " + objAnchor);
-		String sentence = "";
-//		int counter = 0;
-		for(String snt : listSentences) {
-//			System.out.println(counter++ + ".- sentence: \n" + snt);
-//			System.out.println("Paragraph = " + snt);
-			int sIndex = lookSbjIndex(snt,sbjAnchor);
-			int oIndex = lookObjIndex(snt,objAnchor);
-//			System.out.println("sIndex = " + sIndex + " - oIndex = " + oIndex);
-			if(sIndex >= 0 && sIndex < oIndex) {
-				if(oIndex > 0)
-					oIndex += objAnchor.length();
-				if(oIndex > snt.length())
-					oIndex = snt.length();
-//				System.out.println(sIndex + " -- " + oIndex + "--" + snt.length());
-				//creating a substring
-				if(sIndex < oIndex ) {
-//					sentence = snt.substring(sIndex, oIndex);
-					sentence = snt;
-//					System.out.println("Sentence:\n"+sentence);
-//					System.out.println();
-				}
-			}
-//			System.out.println("\n\n");
-		}
-		return sentence;
-	}
+//	public String detectInSentence(String[] listSentences, String sbjAnchor, 
+//			String objAnchor, int endIndex) throws InvalidFormatException, IOException {
+//		/*
+//		 * A sentence is considered only if contains the subject and object
+//		 * Subject must match one of their elements
+//		 * Object must match complete to avoid inconsistencies
+//		 */
+////		System.out.println("Subject = " + sbjAnchor);
+////		System.out.println("Object = " + objAnchor);
+//		String sentence = "";
+////		int counter = 0;
+//		for(String snt : listSentences) {
+////			System.out.println(counter++ + ".- sentence: \n" + snt);
+////			System.out.println("Paragraph = " + snt);
+//			int sIndex = lookSbjIndex(snt,sbjAnchor);
+//			int oIndex = lookObjIndex(snt,objAnchor);
+////			System.out.println("sIndex = " + sIndex + " - oIndex = " + oIndex);
+//			if(sIndex >= 0 && sIndex < oIndex) {
+//				if(oIndex > 0)
+//					oIndex += objAnchor.length();
+//				if(oIndex > snt.length())
+//					oIndex = snt.length();
+////				System.out.println(sIndex + " -- " + oIndex + "--" + snt.length());
+//				//creating a substring
+//				if(sIndex < oIndex ) {
+////					sentence = snt.substring(sIndex, oIndex);
+//					sentence = snt;
+////					System.out.println("Sentence:\n"+sentence);
+////					System.out.println();
+//				}
+//			}
+////			System.out.println("\n\n");
+//		}
+//		return sentence;
+//	}
 	
 	public String detectInParagraph(String paragraph, String objAnchor, 
 			String sbjAnchor) throws InvalidFormatException, IOException {
